@@ -8,7 +8,7 @@ import json
 
 #Huggingface Model call Funtion and setup
 
-HF_Token = ""
+
 
 client = InferenceClient(token = HF_Token)
 
