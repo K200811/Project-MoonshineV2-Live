@@ -8,6 +8,8 @@ import torch
 
 import re
 
+import time
+
 #______________________________________________________________________________________
 
 #Huggingface Model call Funtion and setup
@@ -16,7 +18,7 @@ HF_Token = ""
 
 client = InferenceClient(token = HF_Token)
 
-def formula_check(prompt: str, formula: str):
+def Beta_Function(prompt: str, formula: str):
     messages = [
         {
             "role": "system",
@@ -27,7 +29,7 @@ def formula_check(prompt: str, formula: str):
                     "1. Likelihood Score: [A score from 1 to 100, where 1 means completely impossible/highly unstable, and 100 means an existing or highly feasible stable crystal structure.]"
                     "2. Chemical Reasoning: [A concise breakdown of why you gave this score. Mention specific factors like charge balance, expected oxidation states, or common structural frameworks.]"
                     "Do not claim definitive thermodynamic stability, as this is only an initial screening. Keep your reasoning objective, scientific, and direct."
-                    "Remeber to anwser with a 1 - 100 scale likleyhood rating score"
+                    "Remeber to anwser with a 1 - 100 scale likleyhood rating score at the end of your response with the score labled with the word: Score"
             ),
         },
         {
@@ -52,7 +54,7 @@ def formula_check(prompt: str, formula: str):
 
 #__________________________________________________________________________________________________
 
-def get_Emperical_Formula(prompt: str, formula: str):
+def Super_Beta_Function(prompt: str, formula: str):
     messages = [
         {
             "role": "system",
@@ -162,7 +164,7 @@ def get_Emperical_Formula(prompt: str, formula: str):
     response = client.chat_completion(
         model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
         messages = messages,
-        max_tokens = 5000,
+        max_tokens = 10000,
         temperature = 0.2,
     )
 
@@ -191,7 +193,7 @@ logging.basicConfig(
 
 #Formula Parser
 
-def ReFormula_parser(input_text):
+def Sub_Beta_Function(input_text):
     text = input_text
     formula = ""
     if "Final Answer:" in text:
@@ -215,41 +217,33 @@ def ReFormula_parser(input_text):
 
 
 if __name__ == "__main__":
-    #formula = "NH4H2P04"a
-    formula = "NH4H2PO4"
 
     Alpha_Array = []
 
     with open("HardTests.json", "r", encoding = "utf-8") as file:
         Alpha_Array = json.load(file)
-          
 
 
-logging.info((formula_check("Screen this Crystal Formula:", formula)))
+for i in range (len(Alpha_Array)):
+
+    print("\n")
+    print(f"{i+1} : {Alpha_Array[i]}")
+
+    Reconstructed_Formula = Super_Beta_Function("What is this Series of Elements orriginal Empirical Formula:", Alpha_Array[i])
+
+    formula = Sub_Beta_Function(Reconstructed_Formula)
+    print(f"formula: {formula}")
+
+    ScreeningResult = Beta_Function("Screen this empirical formula", formula)
+    print(f"Screening results: {ScreeningResult}")
 
 
-
-#ReFormula is the recontructed formula fulley parssed
-
-
-
+    print("\n")
+    print("\n")
+    print("#############################################")
 
 
-getEmpericalFormula = get_Emperical_Formula("What is this Series of Elements orriginal Empirical Formula:", Alpha_Array[0])
-print(f"Results of get emperical formula function that is the output of the LLM response to reconstructing the emperical formula {getEmpericalFormula}")
-
-print("\n")
-ReFormula = ReFormula_parser(getEmpericalFormula)
-print(f"Results of ReFormula parser function that gets the formula from the LLM output: {ReFormula}")
-
-print("\n")
-print("\n")
-print("####################################")
-print("\n")
-print("\n")
-
-print(f"Results of the formula check, Checking to see if the formuls is plausable: {formula_check("Screen this Crystal Formula:", ReFormula)}")
-
+time.sleep(2)
 
 
 

@@ -648,3 +648,205 @@ Given these factors, the empirical formula NH4H2PO4 is highly likely to represen
 2026-06-09 13:39:55 - INFO -  Elements Length: 118
 2026-06-09 13:39:55 - INFO -  Refrance Array Length: 12
 2026-06-09 13:39:55 - INFO - Alpha_Arrays.json created
+2026-06-09 15:10:54 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 401 Unauthorized"
+2026-06-09 15:12:43 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:12:46 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:16:08 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:16:11 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:16:11 - INFO - Formula: NH4H2PO4
+2026-06-09 15:16:11 - INFO - Screening Result### Likelihood Score: 95
+
+### Chemical Reasoning:
+1. **Charge Balance**: The empirical formula NH4H2PO4 consists of ammonium (NH4+), hydrogen (H+), and phosphate (H2PO4-). The ammonium ion (NH4+) has a +1 charge, and the dihydrogen phosphate ion (H2PO4-) has a -1 charge. The formula is charge-neutral as the sum of charges is +1 - 1 = 0, which is necessary for a stable compound.
+
+2. **Oxidation States**: 
+   - Nitrogen in NH4+ typically has an oxidation state of -3.
+   - Hydrogen in NH4+ has an oxidation state of +1.
+   - Phosphorus in H2PO4- typically has an oxidation state of +5.
+   - Oxygen in H2PO4- typically has an oxidation state of -2.
+
+3. **Ionic Radii and Coordination Preferences**:
+   - Ammonium (NH4+) is a small, highly polarizable cation that prefers tetrahedral coordination.
+   - Hydrogen ions (H+) are not typically stable in solid form but are present in the ammonium ion.
+   - Phosphate (H2PO4-) is a larger anion that prefers tetrahedral or trigonal bipyramidal coordination.
+
+4. **Common Structural Frameworks**:
+   - The combination of NH4+ and H2PO4- is common in phosphates and ammonium salts. The ammonium ion can coordinate with the phosphate ion, forming a stable structure. This is seen in various ammonium phosphates, such as monopotassium phosphate (KH2PO4) and diammonium phosphate (NH4H2PO4).
+
+Given these factors, NH4H2PO4 is a plausible and stable crystal structure. The empirical formula is consistent with known chemical principles and forms a common class of inorganic salts. Therefore, the likelihood score is 95, indicating a highly feasible and stable crystal structure.
+2026-06-09 15:17:20 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:17:24 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:17:24 - INFO - Formula: Na3C2O6H5·2H2O
+2026-06-09 15:17:24 - INFO - Screening Result1. Likelihood Score: 85
+
+2. Chemical Reasoning: The empirical formula Na3C2O6H5·2H2O is plausible and likely to represent a stable, synthesizable crystal. Here’s the reasoning:
+
+- **Charge Balance**: The formula contains 3 Na⁺ ions (total charge +3) and 10 O atoms in the anion (C2O6 and H2O), which can balance the charge as the anion is likely to be [C2O6]²⁻ (oxalate) and [H5O5]²⁻ (a possible hydrate of oxalate). This gives a total charge of -4, which balances with the +3 from Na⁺, resulting in a neutral compound.
+
+- **Oxidation States**: Sodium (Na) is in its +1 oxidation state, which is common. Carbon (C) in oxalate (C2O6) is typically in the +3 oxidation state, and oxygen (O) is in the -2 oxidation state. The hydrogen atoms (H) in the formula are neutral.
+
+- **Coordination Preferences**: Sodium ions typically form 6-coordinate structures, and oxalate ions (C2O6²⁻) are known to form 4-coordinate structures. The presence of water molecules (H2O) is common in inorganic compounds, often acting as solvates or hydrates.
+
+- **Structural Feasibility**: The formula Na3C2O6H5·2H2O suggests a structure where sodium ions are surrounded by oxalate and water molecules, which is a common arrangement in inorganic chemistry. The hydration of oxalate ions is also well-documented.
+
+Given these factors, the formula is highly likely to represent a stable, synthesizable crystal structure. The score of 85 reflects a high degree of plausibility while acknowledging that definitive stability would require more detailed computational or experimental verification.
+2026-06-09 15:18:53 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:29:19 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:29:22 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:29:22 - INFO - Formula: NH4H2PO4
+2026-06-09 15:29:22 - INFO - Screening Result1. Likelihood Score: 95
+
+2. Chemical Reasoning: The empirical formula NH4H2PO4 is highly plausible for a stable, synthesizable crystal. Here’s the reasoning:
+
+- **Charge Balance**: The formula contains ammonium (NH4+), which has a +1 charge, and dihydrogen phosphate (H2PO4-), which has a -1 charge. The overall charge of the formula is neutral, which is necessary for charge balance in a crystal structure.
+
+- **Oxidation States**: The oxidation states are consistent with the elements involved. Nitrogen in NH4+ is +3, hydrogen in NH4+ is +1, phosphorus in H2PO4- is +5, and oxygen in H2PO4- is -2. These are typical oxidation states for these elements.
+
+- **Coordination Preferences**: Ammonium (NH4+) typically forms tetrahedral coordination, and phosphate (PO4^3-) forms tetrahedral or octahedral coordination. The H2PO4- ion is a bidentate ligand, which can form coordination with metal ions in a tetrahedral or octahedral environment. This is consistent with the presence of NH4+ and H2PO4- in the formula.
+
+- **Common Structural Frameworks**: The combination of NH4+ and H2PO4- is common in inorganic chemistry. For example, ammonium dihydrogen phosphate (NH4H2PO4) is a known compound and is used in various applications, such as fertilizers.
+
+Given these factors, the empirical formula NH4H2PO4 is highly likely to represent a stable, synthesizable crystal structure.
+2026-06-09 15:30:01 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:30:05 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:30:05 - INFO - Formula: Na3(CO3)(HCO3)·2H2O
+2026-06-09 15:30:05 - INFO - Screening Result1. Likelihood Score: 85
+
+2. Chemical Reasoning: 
+- **Charge Balance**: The formula contains sodium (Na), carbonate (CO3), bicarbonate (HCO3), and water (H2O). Sodium ions (Na+) have a +1 charge, carbonate ions (CO3^2-) have a -2 charge, and bicarbonate ions (HCO3^-) have a -1 charge. The formula balances as follows: 3 Na+ (3×+1) + CO3^2- (1×-2) + HCO3^- (1×-1) + 2 H2O (2×0) = +1 overall charge, which is neutralized by the 3 Na+ ions.
+- **Oxidation States**: The oxidation states are consistent with known values: Na is +1, C in CO3 is +4/3 (average of +4 in CO3^2- and +3 in HCO3^-), and O is -2.
+- **Ionic Radii and Coordination Preferences**: Sodium ions (Na+) are small and prefer to form 6-coordinate structures, which is feasible in the presence of water molecules. Carbonate and bicarbonate ions typically form 6-coordinate structures with metal ions, but in this case, they are coordinated with water, which is common in hydrated salts.
+- **Common Structural Frameworks**: The presence of carbonate and bicarbonate ions suggests a structure similar to those found in natural minerals like natron (Na2CO3·10H2O) or similar hydrated sodium carbonates. The hydration water is also consistent with known hydrated salts.
+
+Given these factors, the formula is highly plausible and likely to represent a stable, synthesizable crystal structure.
+2026-06-09 15:31:34 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:32:20 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:32:22 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:32:22 - INFO - Formula: NH4H2PO4
+2026-06-09 15:32:22 - INFO - Screening Result1. Likelihood Score: 95
+
+2. Chemical Reasoning: The empirical formula NH4H2PO4 is highly plausible for a stable, synthesizable crystal. Here’s the reasoning:
+
+- **Charge Balance**: The formula contains ammonium (NH4+), hydrogen (H+), and phosphate (H2PO4-). The ammonium ion has a +1 charge, and the hydrogen phosphate ion has a -1 charge. The overall charge of the formula is neutral (NH4+ + H2PO4-), which is charge balanced.
+
+- **Oxidation States**: The oxidation states are consistent with known values. Nitrogen in NH4+ is +3, hydrogen in NH4+ is +1, phosphorus in H2PO4- is +5, and oxygen in H2PO4- is -2. These values are within the expected ranges for these elements.
+
+- **Coordination Preferences**: Ammonium (NH4+) typically forms tetrahedral coordination, and phosphate (H2PO4-) can form tetrahedral or octahedral coordination. The combination of these ions is common in inorganic chemistry and can form stable structures.
+
+- **Common Structural Frameworks**: This formula represents a known compound, ammonium dihydrogen phosphate, which is a well-established and stable inorganic salt. It is commonly used in fertilizers and other applications.
+
+Given these factors, the empirical formula NH4H2PO4 is highly likely to represent a stable, synthesizable crystal.
+2026-06-09 15:32:57 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:33:00 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:33:00 - INFO - Formula: Na3(CO3)(HCO3)·2H2O
+2026-06-09 15:33:00 - INFO - Screening Result1. Likelihood Score: 85
+
+2. Chemical Reasoning: 
+- **Charge Balance**: The formula includes sodium (Na), carbonate (CO3), bicarbonate (HCO3), and water (H2O). Sodium has a +1 charge, carbonate has a -2 charge, bicarbonate has a -1 charge, and water is neutral. The formula Na3(CO3)(HCO3)·2H2O can be balanced as follows: 3Na+ + CO3^2- + HCO3^- + 2H2O → Na3(CO3)(HCO3)·2H2O. This charge balance is feasible.
+- **Oxidation States**: Sodium is in its +1 oxidation state, which is typical for alkali metals. Carbonate and bicarbonate are in their expected oxidation states (-2 and -1, respectively). Water is neutral.
+- **Coordination Preferences**: Sodium ions typically form 6-coordinate structures, while carbonate and bicarbonate ions can form 4-coordinate structures. The presence of water molecules is common in hydrated salts.
+- **Common Structural Frameworks**: This formula resembles a hydrated sodium bicarbonate-carbonate compound, which is known to exist and is stable. The presence of both carbonate and bicarbonate ions is not uncommon in natural and synthetic salts, and the hydration is also typical.
+- **Stability**: The compound is likely stable under normal conditions, as it is a hydrated salt that can exist in nature and is often produced in laboratory settings.
+
+Given these factors, the formula is highly plausible and likely to represent a stable, synthesizable crystal.
+2026-06-09 15:34:30 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:34:35 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:34:35 - INFO - Formula: Fe(NH4)2(SO4)2(NO2)·5H2O
+2026-06-09 15:34:35 - INFO - Screening Result### Likelihood Score: 85
+
+### Chemical Reasoning:
+1. **Charge Balance**: The formula contains iron (Fe), ammonium (NH4+), sulfate (SO4^2-), nitrite (NO2^-), and water (H2O). The overall charge of the formula must be neutral. Let's check the charge balance:
+   - Fe: +3 (common oxidation state for iron)
+   - 2 NH4+: +1 each, total +2
+   - 2 SO4^2-: -2 each, total -4
+   - 2 NO2^-: -1 each, total -2
+   - 5 H2O: neutral (no charge)
+   - Net charge: +2 - 6 = -4 + 2 = 0 (neutral)
+
+2. **Oxidation States**: The oxidation states are consistent with common values for these elements:
+   - Fe: +3
+   - N in NH4+: +1
+   - S in SO4^2-: +6
+   - N in NO2^-: +3
+
+3. **Ionic Radii and Coordination**: 
+   - Fe(III) typically forms octahedral coordination.
+   - NH4+ and NO2^- can form various coordination geometries, but are common in coordination complexes.
+   - SO4^2- typically forms tetrahedral coordination.
+   - Water molecules can form various coordination geometries, but are common in coordination complexes.
+
+4. **Common Structural Frameworks**: This formula resembles a coordination compound with a combination of metal ions and various anions. Such compounds are common in inorganic chemistry, especially in the context of coordination complexes and hydrates.
+
+5. **Stability and Synthesizability**: The presence of water molecules (5 H2O) suggests a hydrate, which is a common form for many inorganic compounds. The combination of Fe(III), NH4+, SO4^2-, and NO2^- is plausible and has been observed in various coordination complexes and minerals.
+
+Given these factors, the formula is highly likely to represent a stable, synthesizable crystal structure. The score of 85 reflects a high probability of this formula representing a real-world, stable compound.
+2026-06-09 15:34:53 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:34:56 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:34:56 - INFO - Formula: Cu2(CO3)(OH)2
+2026-06-09 15:34:56 - INFO - Screening Result1. Likelihood Score: 95
+
+2. Chemical Reasoning: 
+- **Charge Balance**: The empirical formula Cu2(CO3)(OH)2 consists of two copper (Cu) atoms, one carbonate (CO3) group, and two hydroxide (OH) groups. Copper typically has an oxidation state of +2, making the total positive charge from copper +4. The carbonate ion (CO3^2-) has a -2 charge, and the hydroxide ion (OH^-) has a -1 charge, giving a total negative charge of -3. The charge imbalance is +4 (from Cu) and -3 (from CO3 and OH), which is not balanced. However, the formula can be adjusted to Cu2(OH)2(CO3)2 to achieve charge neutrality, which is a plausible structure known as malachite.
+- **Oxidation States**: Copper in +2 oxidation state is common and stable. Carbonate (CO3^2-) and hydroxide (OH^-) are also common ions in inorganic chemistry.
+- **Coordination Preferences**: Copper(II) ions typically form square planar or tetrahedral coordination geometries, which can accommodate the carbonate and hydroxide ligands. The carbonate ion is trigonal planar, and the hydroxide ion is linear, fitting well with copper's coordination preferences.
+- **Common Structural Frameworks**: The structure Cu2(OH)2(CO3)2 is known as malachite, a natural copper carbonate hydroxide mineral. This indicates that the formula is not only theoretically plausible but also corresponds to a known and stable crystal structure.
+
+Given these factors, the formula Cu2(CO3)(OH)2, when corrected to Cu2(OH)2(CO3)2, represents a highly plausible and stable crystal structure.
+2026-06-09 15:35:41 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:35:45 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:35:45 - INFO - Formula: CaNa(SO4)3
+2026-06-09 15:35:45 - INFO - Screening Result1. Likelihood Score: 20
+
+2. Chemical Reasoning: The empirical formula CaNa(SO4)3 is highly unlikely to represent a stable, synthesizable crystal. Here are the key reasons:
+
+- **Charge Balance**: The formula suggests a compound with a 3+ charge from calcium (Ca) and a 1- charge from sodium (Na) and sulfate (SO4). However, the sulfate ion (SO4) is typically -2, and the formula would require 3 sulfate ions to balance the charges, resulting in CaNa(SO4)3, which has a net charge of +1 on the left and -6 on the right, making it impossible to balance the charges.
+
+- **Oxidation States**: Calcium (Ca) typically has an oxidation state of +2, and sodium (Na) has an oxidation state of +1. Sulfate (SO4) has an oxidation state of -2. The formula does not align with common oxidation states and charge balancing rules.
+
+- **Coordination Preferences**: Sulfate ions typically form coordination numbers of 4, and calcium and sodium ions typically form coordination numbers of 6 and 4, respectively. The formula does not reflect these common coordination preferences.
+
+Given these issues, the formula is not likely to represent a stable or synthesizable crystal structure.
+2026-06-09 15:36:43 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:36:49 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 15:36:49 - INFO - Formula: Ca₁₀(SiO₄)₃(SO₄)₃(OH)₂
+2026-06-09 15:36:49 - INFO - Screening Result### Likelihood Score: 85
+
+### Chemical Reasoning:
+1. **Charge Balance:**
+   - Calcium (Ca) has a +2 charge.
+   - Silicon dioxide (SiO₄) tetrahedra are neutral.
+   - Sulfate (SO₄) has a -2 charge.
+   - Hydroxide (OH) has a -1 charge.
+   - The formula contains 10 Ca⁺², 3 SiO₄ (neutral), 3 SO₄⁻², and 2 OH⁻.
+   - Total positive charge: 10 × +2 = +20
+   - Total negative charge: 3 × 0 + 3 × -2 + 2 × -1 = -8
+   - Charge balance: +20 - 8 = +12, which is not neutral. This suggests the formula as written is not charge balanced.
+
+2. **Oxidation States:**
+   - Calcium (Ca) typically has an oxidation state of +2.
+   - Silicon (Si) in SiO₄ typically has an oxidation state of +4.
+   - Oxygen (O) in SiO₄ and SO₄ typically has an oxidation state of -2.
+   - Sulfate (SO₄) has a -2 charge, consistent with sulfur (S) having an oxidation state of +6.
+   - Hydroxide (OH) has a -1 charge, consistent with oxygen (O) having an oxidation state of -2 and hydrogen (H) having a +1 charge.
+
+3. **Coordination Preferences:**
+   - Calcium ions (Ca²⁺) typically form coordination numbers of 6, often in octahedral or distorted octahedral environments.
+   - Silicon in SiO₄ tetrahedra is typically coordinated to four oxygen atoms.
+   - Sulfate ions (SO₄⁻²) are tetrahedrally coordinated.
+   - Hydroxide ions (OH⁻) can form hydrogen bonds and are often found in layered or sheet structures.
+
+4. **Structural Framework:**
+   - The presence of SiO₄ tetrahedra and SO₄ tetrahedra suggests a framework structure, which is common in silicates and sulfates.
+   - The inclusion of hydroxide ions (OH) is plausible in hydrated minerals, where they can form hydrogen bonds with other ions or water molecules.
+
+5. **Possible Modifications:**
+   - To achieve charge neutrality, the formula might need to be modified. For example, adding 4 more sulfate groups (SO₄⁻²) would balance the charge: Ca₁₀(SiO₄)₃(SO₄)₇(OH)₂.
+   - Alternatively, the formula could be adjusted to include other anions or cations to balance the charge.
+
+Given these considerations, the formula is highly plausible with some modifications to achieve charge neutrality. The score of 85 reflects a strong likelihood of the formula representing a stable, synthesizable crystal structure with appropriate modifications.
+2026-06-09 15:38:49 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 504 Gateway Time-out"
+2026-06-09 16:55:40 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 16:55:43 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 16:59:45 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 16:59:48 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-09 17:01:48 - INFO - HTTP Request: POST https://router.huggingface.co/v1/chat/completions "HTTP/1.1 504 Gateway Time-out"
