@@ -12,7 +12,7 @@ import re
 
 #Huggingface Model call Funtion and setup
 
-HF_Token = "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"
+HF_Token = ""
 
 client = InferenceClient(token = HF_Token)
 
