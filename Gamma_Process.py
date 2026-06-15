@@ -1,0 +1,489 @@
+import os 
+from huggingface_hub import InferenceClient
+import logging
+import json
+
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
+import time
+
+import sys
+
+from pyxtal import pyxtal
+
+import torch
+from chgnet.model import CHGNet
+from chgnet.model import StructOptimizer
+from pymatgen.core import Structure
+from ase.constraints import FixSymmetry
+from pymatgen.io.ase import AseAtomsAdaptor
+from chgnet.model.dynamics import CHGNetCalculator
+from ase.constraints import FixSymmetry
+from ase.optimize import FIRE
+from ase.filters import FrechetCellFilter
+
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+
+from pymatgen.io.cif import CifWriter
+
+#________________________________________________________________
+#AI Code
+
+HF_Token = ""
+
+client = InferenceClient(token = HF_Token)
+
+#First AI that generates values for inital PyXtal structure generation
+def InitalSuperGammaFunction (formula: str):
+    messages = [
+        {
+            "role": "system",
+            "content": (
+            "You are an expert materials scientist and solid-state chemist with deep, working knowledge of "
+            "crystallography, space group theory, Wyckoff positions, and crystal structure prediction for "
+            "inorganic compounds.\n\n"
+
+            "=== TASK ===\n"
+            "You will be given the chemical formula of an inorganic crystal. Your job is to determine four "
+            "input parameters for the PyXtal crystal structure generator. PyXtal is a Python tool that "
+            "builds 3D atomic structures from a small set of inputs by placing atoms onto symmetry-allowed "
+            "positions within a unit cell (the repeating 'box' of atoms that tiles together to form the "
+            "full crystal). Your four parameters must be chosen so that PyXtal can successfully build a "
+            "physically realistic crystal structure WITHOUT crashing.\n\n"
+
+            "=== THE FOUR REQUIRED PARAMETERS ===\n\n"
+
+            "1. Dim (integer) — Dimensionality of the structure.\n"
+            "   This describes whether the crystal repeats in 3 directions (a normal solid), 2 directions "
+            "(a flat sheet/layer), 1 direction (a chain or rod), or 0 directions (an isolated cluster of "
+            "atoms with no repetition).\n"
+            "   - 3 = a normal bulk 3D crystal. This is correct for the vast majority of inorganic "
+            "compounds (salts, oxides, minerals, metals, etc.). Use this unless you have a specific reason "
+            "not to.\n"
+            "   - 2 = a 2D layered material, where atoms form flat sheets that stack but are only weakly "
+            "connected between sheets (e.g., graphite, MoS2, hexagonal boron nitride).\n"
+            "   - 1 = a 1D chain or rod-like structure.\n"
+            "   - 0 = an isolated 0D molecule or cluster.\n"
+            "   Default to 3 unless the compound is a well-known layered/2D/1D material.\n\n"
+
+            "2. Group (integer) — The space group number.\n"
+            "   A 'space group' is one of 230 (for 3D crystals) standardized patterns of symmetry "
+            "operations (rotations, reflections, translations) that describe how a small repeating unit "
+            "of atoms can be copied and arranged to fill 3D space and form a crystal. Every real crystal "
+            "belongs to exactly one space group, and this number tells PyXtal which symmetry pattern to "
+            "use when arranging atoms.\n"
+            "   - If Dim=3: choose an integer from 1 to 230 (the standard 3D space group numbers from the "
+            "International Tables for Crystallography).\n"
+            "   - If Dim=2: choose an integer from 1 to 80 (layer group numbers, the 2D equivalent).\n"
+            "   - If Dim=1: choose an integer from 1 to 75 (rod group numbers, the 1D equivalent).\n"
+            "   - If Dim=0: choose a valid point group (a symmetry group with no translation, used for "
+            "isolated clusters/molecules).\n"
+            "   Choose the space group that matches a real or realistic crystal structure for this "
+            "compound, as described in the WORKFLOW below.\n\n"
+
+            "3. Species (list of strings) — The list of elements in the formula.\n"
+            "   This is simply every distinct chemical element present in the formula, written as standard "
+            "one- or two-letter periodic table symbols (e.g., 'Na', 'Cl', 'Fe', 'O'). Each element should "
+            "appear exactly once in this list, regardless of how many atoms of it are in the formula. Do "
+            "not include numbers, charges, or oxidation states — just the bare element symbol.\n"
+            "   Example: for the formula Cu2(CO3)(OH)2, the distinct elements are copper, carbon, oxygen, "
+            "and hydrogen, so Species = ['Cu', 'C', 'O', 'H'].\n\n"
+
+            "4. NumIons (list of integers) — How many atoms of each element go in the unit cell.\n"
+            "   The 'unit cell' is the repeating box of atoms mentioned above. The 'conventional unit cell' "
+            "is the standard, full-size version of this box as defined for the chosen space group (as "
+            "opposed to a smaller 'primitive cell', which can sometimes contain fewer atoms). NumIons "
+            "tells PyXtal exactly how many atoms of each element to place inside this conventional unit "
+            "cell in total.\n"
+            "   Important: this is often NOT the same as the smallest whole-number ratio from the chemical "
+            "formula. For example, the formula NaCl has a 1:1 ratio of Na to Cl, but the actual "
+            "conventional unit cell of real rock-salt NaCl contains 4 Na atoms and 4 Cl atoms — the ratio "
+            "is preserved (1:1) but the total counts are scaled up to match the real unit cell size.\n"
+            "   The order of numbers in NumIons must match the order of elements in Species, position by "
+            "position. If Species = ['Cu', 'C', 'O', 'H'], then NumIons[0] must be the total number of Cu "
+            "atoms, NumIons[1] the total number of C atoms, and so on — in that same order.\n\n"
+
+            "=== BACKGROUND: WHY NUMIONS MUST BE CHOSEN CAREFULLY (THE WYCKOFF CONSTRAINT) ===\n"
+            "Within each space group's unit cell, there are only certain 'allowed' locations where atoms "
+            "can sit, called Wyckoff positions. Each Wyckoff position has a fixed 'multiplicity' — a fixed "
+            "number of equivalent atom sites that always come together as a group because of the "
+            "symmetry of the space group. For example, a particular space group might only allow atoms to "
+            "be placed in groups of 2, 4, or 8 at a time for a given site — never in a group of 1, 3, or 5 "
+            "— because the symmetry operations of that space group automatically generate copies of each "
+            "atom at those multiples.\n\n"
+
+            "PyXtal works by taking the number you give it for each element (from NumIons) and trying to "
+            "break that number down into a combination of these allowed Wyckoff multiplicities for the "
+            "chosen space group. If a number in NumIons CANNOT be broken down this way — for example, if "
+            "you ask PyXtal to place exactly 1 atom of an element, but every Wyckoff position for that "
+            "space group requires atoms to come in groups of 4 — then PyXtal has no valid way to place "
+            "that atom, and it will fail or crash instead of producing a structure.\n\n"
+
+            "The most common mistake is using the raw, smallest-whole-number formula ratio (this is called "
+            "using Z=1, where Z is explained in Step 3 below) when the chosen space group doesn't support "
+            "such small numbers. Many common space groups (for example, space group 14, also written "
+            "P2_1/c) have a minimum group size of 4 for general atom positions, meaning a count of 1 is "
+            "never valid, and a count of 2 is only valid if a special smaller-multiplicity position exists "
+            "and is appropriate for that atom's symmetry.\n\n"
+
+            "=== STEP-BY-STEP WORKFLOW (follow every step, in order, do not skip any) ===\n\n"
+
+            "STEP 1 — Parse the formula into base atom counts.\n"
+            "Read the given chemical formula and count how many atoms of each element it contains, fully "
+            "multiplying out any parentheses or subscripts. This gives you the 'base counts' — the "
+            "smallest whole-number ratio of atoms.\n"
+            "Example: Cu2(CO3)(OH)2 means 2 copper atoms, plus 1 carbon and 3 oxygen atoms from the "
+            "carbonate group (CO3), plus 2 oxygen and 2 hydrogen atoms from two hydroxide groups (OH x2). "
+            "Adding the oxygen from both groups (3 + 2 = 5), the base counts are: Cu:2, C:1, O:5, H:2.\n"
+            "Example: NH4H2PO4 means 1 nitrogen, 4+2=6 hydrogen (4 from the ammonium group NH4, plus 2 "
+            "more written separately), 1 phosphorus, and 4 oxygen. Base counts: N:1, H:6, P:1, O:4.\n\n"
+
+            "STEP 2 — Figure out what real structure this formula most likely matches, and its space "
+            "group.\n"
+            "Many inorganic compounds fall into well-known 'structure families' or 'prototypes' — common "
+            "arrangements that many different compounds share because they have similar atom sizes and "
+            "chemical bonding. Examples of well-known prototypes include: rock salt (like NaCl), fluorite "
+            "(like CaF2), perovskite (like CaTiO3), spinel, rutile (like TiO2), wurtzite, zincblende, "
+            "garnet, olivine, pyroxene, and various mineral-specific structures (e.g., malachite for "
+            "Cu2(CO3)(OH)2).\n"
+            "Using your knowledge of chemistry, mineralogy "
+            "decide which prototype this formula most "
+            "likely matches. Then identify the space group number that is reported for that prototype (or, "
+            "if this exact compound is a known mineral or material, use its actual reported space group). "
+            "If the compound is unusual or not well-known, pick the space group of the closest chemically "
+            "similar compound (similar ion sizes and similar formula ratios) as your best estimate.\n\n"
+
+            "STEP 3 — Figure out Z, the number of formula units in the unit cell.\n"
+            "'Z' is a number that tells you how many complete copies of the chemical formula fit inside "
+            "one conventional unit cell of the chosen space group. For instance, if Z=2 for a compound "
+            "with formula XY, the unit cell contains 2 X atoms and 2 Y atoms total (2 copies of 'XY'). Z "
+            "is a property of the specific crystal structure and space group — different structures have "
+            "different Z values, commonly 1, 2, 4, or 8, though other values are possible.\n"
+            "Base your choice of Z on what is actually known or typical for the prototype you identified "
+            "in Step 2 — do not default to Z=1, because Z=1 very often produces NumIons values that are "
+            "too small to be valid for common space groups (as explained above). If you don't know the "
+            "exact Z for this specific compound, choose the smallest Z that you believe would both (a) "
+            "produce NumIons values that fit the Wyckoff positions of the space group you chose, and (b) "
+            "make sense for that type of structure.\n\n"
+
+            "STEP 4 — Calculate NumIons by scaling up the base counts by Z.\n"
+            "Multiply every base atom count from Step 1 by the Z value from Step 3. This gives you the "
+            "final NumIons list — the total number of each type of atom in the full conventional unit "
+            "cell.\n"
+            "Formula: NumIons[i] = (base count of Species[i] from Step 1) multiplied by Z.\n"
+            "Example: Malachite Cu2(CO3)(OH)2 has base counts Cu:2, C:1, O:5, H:2 (from Step 1). If Z=2, "
+            "then NumIons = [Cu: 2x2=4, C: 1x2=2, O: 5x2=10, H: 2x2=4], i.e., NumIons = [4, 2, 10, 4].\n"
+            "Example: NH4H2PO4 has base counts N:1, H:6, P:1, O:4 (from Step 1). If Z=2, then "
+            "NumIons = [N: 1x2=2, H: 6x2=12, P: 1x2=2, O: 4x2=8], i.e., NumIons = [2, 12, 2, 8].\n\n"
+
+            "STEP 5 — Double-check that every number in NumIons is actually usable by the space group "
+            "(mandatory final check).\n"
+            "Before giving your final answer, think through whether each number in your NumIons list "
+            "could realistically be built by adding together one or more of the allowed Wyckoff "
+            "multiplicities for the space group you chose (as explained in the BACKGROUND section above). "
+            "In practice, this means asking: 'Could the symmetry operations of this space group actually "
+            "produce this many copies of this atom?'\n"
+            "If any number in NumIons seems like it could NOT be produced this way:\n"
+            "   (a) First, try a different (usually larger) value of Z, go back to Step 4, and recompute "
+            "NumIons with the new Z, OR\n"
+            "   (b) If changing Z doesn't fix the problem, go back to Step 2 and pick a different but "
+            "closely related space group commonly used for this same type of structure (for example, a "
+            "slightly higher- or lower-symmetry version of the same structure family), and then redo Steps "
+            "3-5 with the new space group.\n"
+            "Keep adjusting Z and/or the space group until every number in NumIons passes this check. Do "
+            "not give your final answer until you are confident every NumIons value would actually work "
+            "with the Group you are reporting.\n\n"
+
+            "=== RULES FOR MATCHING SPECIES AND NUMIONS ===\n"
+            "- Species and NumIons must be the same length: exactly one number in NumIons for every "
+            "element in Species, with none missing and none extra.\n"
+            "- The two lists must line up by position: the first number in NumIons is the total count for "
+            "the first element in Species, the second number in NumIons is the total count for the second "
+            "element in Species, and so on, all the way through both lists.\n"
+            "- Never change the order, combine elements together, split an element into two entries, or "
+            "leave an element out of either list.\n\n"
+
+            "=== HOW TO FORMAT YOUR FINAL ANSWER ===\n"
+            "Your reply must contain ONLY the following four lines, and nothing else — no extra words "
+            "before or after, no markdown symbols (like asterisks, backticks, or code block fences), no "
+            "bullet points, and no explanation of how you got your answer. Just these four lines, each "
+            "starting with the label shown, followed by the value:\n\n"
+            "Dim: <integer>\n"
+            "Group: <integer>\n"
+            "Species: <list of element symbol strings, e.g., ['Cu', 'C', 'O', 'H']>\n"
+            "NumIons: <list of integers, e.g., [4, 2, 10, 4]>"
+
+
+            ),
+
+        },
+        {
+            "role": "user",
+            "content": f"Prompt: Determine the PyXtal Parameters for this Crystal Formula: {formula}"
+        }
+    ]
+
+    response = client.chat_completion(
+        model = "Qwen/Qwen2.5-72B-Instruct",
+        messages = messages,
+        max_tokens = 8000,
+        temperature = 0.2,
+    )
+
+    return response.choices[0].message.content
+
+#____________________________________________________________________________
+
+###############################################################################
+
+#_____________________________________________________________________________
+
+#Formula Parser
+
+def SubGammaFunction(text_to_search:str, start_keyword, end_keyword):
+
+    if end_keyword == "end":
+        text = text_to_search
+        extracted_text = ""
+        if start_keyword in text:
+            raw_anwser = text.split(start_keyword)[-1]
+            extracted_text = raw_anwser.strip('#!"')
+        return extracted_text
+
+
+    if start_keyword in text_to_search and end_keyword in text_to_search:
+        content_start = text_to_search.find(start_keyword) + len(start_keyword)
+        end_index = text_to_search.find(end_keyword, content_start)
+        extracted_text = text_to_search[content_start:end_index]
+    else:
+        print("keywords not in response")
+        sys.exit(1)
+
+
+
+    return extracted_text.strip()
+
+
+
+#___________________________________________________________________________
+
+
+##############################################################################
+
+#____________________________________________________________________________
+
+def GammaOneFunction (dim, group, species, numIons):
+    Crystal = pyxtal()
+
+    Crystal.from_random(
+        dim = dim,
+        group = group,
+        species = species,
+        numIons = numIons
+    )
+
+    return Crystal
+
+
+#____________________________________________________________________________
+
+##############################################################################
+
+#___________________________________________________________________________
+
+def GammaTwoFunction():
+
+    print(f"CUDA avaliblity check: {torch.cuda.is_available()}")
+
+    structure = Structure.from_file("PyXtalStructure.cif")
+
+    adapter = AseAtomsAdaptor()
+    ase_atoms = adapter.get_atoms(structure)
+
+    chgnet_model = CHGNet.load()
+    calculator = CHGNetCalculator(model=chgnet_model)
+    ase_atoms.calc = calculator
+
+    symmetry_constraint = FixSymmetry(ase_atoms)
+    ase_atoms.set_constraint(symmetry_constraint)
+
+    ecf = FrechetCellFilter(ase_atoms)
+
+    optimizer = FIRE(ecf, logfile=None)
+    optimizer.run(fmax=0.1, steps=500)
+
+    final_structure = adapter.get_structure(ase_atoms)
+    crystal_info = ase_atoms.calc.results
+
+    analizer = SpacegroupAnalyzer(final_structure, symprec = 0.1)
+    print(f"Dected Space Group: {analizer.get_space_group_symbol()}")
+
+
+    correct_structure = analizer.get_symmetrized_structure()
+
+
+    total_engery = crystal_info["energy"]
+    forces = crystal_info["forces"]
+    stress = crystal_info["stress"]
+
+    result = {
+        "final_structure": correct_structure,
+        "total_energy": total_engery,
+        "forces": forces,
+        "stress": stress
+    }
+
+    return result
+
+
+
+
+
+#______________________________________________________________________________
+
+
+###############################################################################
+
+#______________________________________________________________________________
+
+# Main function
+
+if __name__ == '__main__':
+
+    Beta_Array = []
+
+    with open("BetaFile", "r", encoding = "utf-8") as file:
+        Beta_Array = json.load(file)
+ 
+    for entry in Beta_Array:
+        
+
+        print("\n")
+        print("--------------------------------------------------- Start of Next Compound ---------------------------------------------")
+
+        print("\n")
+
+        # InitalSuperGammaResult = InitalSuperGammaFunction(entry["Formula"])
+        # print(f"Formula: {entry["Formula"]}")
+        # #print(f"InitalSuperGammaFunction Result {InitalSuperGammaResult}")
+
+        #__________________________________________________________________________________
+        #Value Parsing
+
+        print("\n")
+
+        print("------------------------Value Parsing-----------------------------------")
+
+        
+        # Dim = int(SubGammaFunction(InitalSuperGammaResult, "Dim:", "Group"))
+        # print(f"Dim:{Dim}")
+
+        # Group = int(SubGammaFunction(InitalSuperGammaResult, "Group:", "Species"))
+        # print(f"Group:{Group}")
+
+        # SpeciesSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "Species:", "NumIons").replace("'", '"')
+        # print(f"SpeciesSubGammFunctionResult:{SpeciesSubGammaFunctionResult}")
+        # Species = json.loads(SpeciesSubGammaFunctionResult)
+        # print(f"Species:{Species}")
+
+        # NumIonsSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "NumIons:", "end").replace("'", '"')
+        # print(f"NumIonsSubGammFunctionResult: {NumIonsSubGammaFunctionResult}")
+        # NumIons = json.loads(NumIonsSubGammaFunctionResult)
+        # print(f"NumIons:{NumIons}")
+        
+
+        #____________________________________________________________________________________
+
+        #___________________________________________
+
+        #Temp Values for structure gen so we dont have to use AI credits every test
+
+        Dim = 3
+        Group = 122
+        Species = ["N", "H", "P", "O"]
+        NumIons = [4, 24, 4, 16]
+        
+
+
+        #___________________________________________
+
+        # print("\n")
+        # print("--------------------Crystal Structure generation---------------------------")
+        # GammaOneFunctionCrystalStructure = GammaOneFunction(Dim, Group, Species, NumIons)
+        # print(f"GammaOneFunction Crystal Strucutre Information {GammaOneFunctionCrystalStructure}")
+        # print(f"Formula: {GammaOneFunctionCrystalStructure.formula}")
+        # print(f"Atoms: {GammaOneFunctionCrystalStructure.numIons}")
+        # print(f"Space Groups: {GammaOneFunctionCrystalStructure.group}")
+
+        # GammaOneFunctionCrystalStructure.to_file("PyXtalStructure.cif")
+
+    #______________________________________________________________________________________________
+
+    print("\n")
+
+    print("----------------------------------------- CHGNet Relaxation ----------------------------------------------------")
+
+    print("\n")
+
+
+    # CHGNet Relaxation
+
+
+
+    GammaTwoFunctionResult = GammaTwoFunction()
+    print(f"GammaTwoFunction result: {GammaTwoFunctionResult}")
+
+
+    #__________________________________________________________________
+
+    # Relaxation results printing and parsing
+
+    Relaxed_Structure = GammaTwoFunctionResult["final_structure"]
+    print(f"Relaxed Structure: {Relaxed_Structure}")
+    Total_Energy = GammaTwoFunctionResult["total_energy"]
+    print(f"Total Energy: {Total_Energy}")
+    ForcesArray = GammaTwoFunctionResult["forces"]
+    print(f"ForcesArray: {ForcesArray}")
+    StressArrays = GammaTwoFunctionResult["stress"]
+    print(f"StressArray: {StressArrays}")
+    # Chech to see if we can get individual stress numbers print(f"stress[0][0]: {Stress[0][0]}")
+
+
+#________________________________________________________________
+
+    StressTestPass = True
+
+
+    # Stress Test
+    for i in range (len(StressArrays)):
+        SubStressArray = StressArrays[i]
+        for j in range (len(SubStressArray)):
+            print(f"Testing Stress of: {SubStressArray[j]}")
+            print("\n")
+            if abs(SubStressArray[j]) > 0.1:
+                StressTestPass = False
+                print(f" Stress Test failed for {SubStressArray[j]}")
+
+
+
+#_____________________________________________________________________
+
+    ForcesTestPass = True
+
+    # Forces Test
+    for i in range (len(ForcesArray)):
+        SubForcesArray = ForcesArray[i]
+        for j in range (len(SubForcesArray)):
+            print(f"Testing Forces of: {SubForcesArray[j]}")
+            print("\n")
+            if abs(SubForcesArray[j]) > 0.1:
+                ForcesTestPass = False
+                print(f" Forces Test failed for {SubForcesArray[j]}")
+
+
+    if StressTestPass == True and ForcesTestPass == True:
+        export_structure_file = CifWriter(Relaxed_Structure, symprec=0.1)
+        export_structure_file.write_file(f"relaxedStructure_{entry['Formula']}.cif")
+        print("\n")
+        print("\n")
+        print(f"{entry['Formula']} passed and the structure was created")

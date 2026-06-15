@@ -1,12 +1,7 @@
 [
     {
-        "Index": 1,
-        "Formula": "NH4H2PO4",
-        "Score": "95"
-    },
-    {
         "Index": 2,
-        "Formula": "Cu\u2082(OH)\u2082CO\u2083",
-        "Score": "90"
+        "Formula": "Cu2(CO3)(OH)2",
+        "Score": "92"
     }
 ]

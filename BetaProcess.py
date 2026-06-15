@@ -14,7 +14,7 @@ import time
 
 #Huggingface Model call Funtion and setup
 
-HF_Token = ""
+HF_Token = "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"
 
 client = InferenceClient(token = HF_Token)
 
@@ -104,7 +104,7 @@ def Beta_Function(prompt: str, formula: str):
 
 
     response = client.chat_completion(
-        model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        model = "meta-llama/Llama-3.3-70B-Instruct",
         messages = messages,
         max_tokens = 8000,
         temperature = 0.2,
@@ -222,7 +222,7 @@ def Super_Beta_Function(prompt: str, formula: str):
 
                 "═══ OUTPUT FORMAT ═══"
                 "Return ONLY:"
-                "The final structural empirical formula. Labled with the words: Finnal Answer:, and surrounded by quoatation marks"
+                "The final structural empirical formula. Labled with ONLY WITH the words: Final Answer:, AT THE END OF YOUR RESPONSE"
             ),
         },
         {
@@ -233,7 +233,7 @@ def Super_Beta_Function(prompt: str, formula: str):
 
 
     response = client.chat_completion(
-        model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        model = "meta-llama/Llama-3.3-70B-Instruct",
         messages = messages,
         max_tokens = 10000,
         temperature = 0.2,
@@ -298,12 +298,13 @@ if __name__ == "__main__":
         Alpha_Array = json.load(file)
 
 
-for i in range (len(Alpha_Array) - 13):
+for i in range (len(Alpha_Array)- 10): #-13 there to only run first 2 alpha arrays 
 
     print("\n")
     print(f"{i+1} : {Alpha_Array[i]}")
 
-    Reconstructed_Formula = Super_Beta_Function("What is this Series of Elements orriginal Empirical Formula:", Alpha_Array[i])
+    Reconstructed_Formula = Super_Beta_Function("What is this Series of Elements orriginal Empirical Formula:", Alpha_Array[i]).replace("#", "").replace('"', '')
+    #print(f"Reconstructed formula {Reconstructed_Formula}")
 
     formula = Sub_Beta_Function(Reconstructed_Formula, "Final Answer:")
     print(f"formula: {formula}")
