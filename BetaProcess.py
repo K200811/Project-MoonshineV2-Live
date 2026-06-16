@@ -278,6 +278,20 @@ def Sub_Beta_Function(input_text, key):
         print("Could not extract formula")
     return formula
 
+#___________________________________________________________________________________________________
+
+###########################################################################################################
+
+
+#_______________________________________________________________________________________________________
+
+# Beta Array Cleaner
+
+def Beta_Array_Cleaner(Beta_Array):
+    return list ({entry["Formula"]: entry for entry in Beta_Array}.values())
+
+
+
 #_____________________________________________________________________________________________________
 
 ####################################################################################################3
@@ -291,14 +305,16 @@ StabilityArray = []
 
 if __name__ == "__main__":
 
+
+
     Alpha_Array = []
     Beta_Array = []
 
-    with open("HardTests.json", "r", encoding = "utf-8") as file:
+    with open("Alpha_Arrays.json", "r", encoding = "utf-8") as file:
         Alpha_Array = json.load(file)
 
 
-for i in range (len(Alpha_Array)- 10): #-13 there to only run first 2 alpha arrays 
+for i in range (3): # Replace 3 with len(Alpha_Array)
 
     print("\n")
     print(f"{i+1} : {Alpha_Array[i]}")
@@ -331,8 +347,10 @@ for i in range (len(Alpha_Array)- 10): #-13 there to only run first 2 alpha arra
 
     time.sleep(2)
 
+cleaned_Beta_Array = Beta_Array_Cleaner(Beta_Array)
+
 with open("BetaFile", "w") as json_file:
-    json.dump(Beta_Array, json_file, indent=4)
+    json.dump(cleaned_Beta_Array, json_file, indent=4)
 
 
 

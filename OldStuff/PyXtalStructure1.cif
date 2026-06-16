@@ -16,13 +16,13 @@ data_from_pyxtal
 _symmetry_space_group_name_H-M 'P21/c'
 _symmetry_Int_Tables_number                   14
 _symmetry_cell_setting                monoclinic
-_cell_length_a            6.837971
-_cell_length_b            4.862903
-_cell_length_c            7.234594
+_cell_length_a            6.048300
+_cell_length_b            7.175910
+_cell_length_c            5.518708
 _cell_angle_alpha        90.000000
-_cell_angle_beta         84.636634
+_cell_angle_beta        103.859556
 _cell_angle_gamma        90.000000
-_cell_volume            239.514335
+_cell_volume            232.549744
 
 loop_
  _symmetry_equiv_pos_site_id
@@ -40,13 +40,12 @@ loop_
  _atom_site_fract_y
  _atom_site_fract_z
  _atom_site_occupancy
-Li     Li       2     0.500000    0.000000    0.500000 1
-H      H        4     0.860210    0.259904    0.009344 1
-H      H        4     0.371108    0.732885    0.393148 1
-H      H        4     0.895310    0.307098    0.225668 1
-P      P        2     0.500000    0.000000    0.000000 1
-O      O        2     0.000000    0.000000    0.000000 1
-O      O        4     0.232939    0.481881    0.626933 1
+Cu     Cu       4     0.966727    0.609586    0.186960 1
+C      C        2     0.500000    0.000000    0.000000 1
+O      O        4     0.574147    0.761913    0.965074 1
+O      O        4     0.838259    0.553806    0.419397 1
 O      O        2     0.000000    0.000000    0.500000 1
+H      H        2     0.500000    0.000000    0.500000 1
+H      H        2     0.000000    0.000000    0.000000 1
 #END
 

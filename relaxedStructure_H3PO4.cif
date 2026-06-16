@@ -1,0 +1,39 @@
+# generated using pymatgen
+data_PH3O4
+_symmetry_space_group_name_H-M   Pmna
+_cell_length_a   3.07099826
+_cell_length_b   6.81286743
+_cell_length_c   8.53833030
+_cell_angle_alpha   90.00000000
+_cell_angle_beta   90.00000000
+_cell_angle_gamma   90.00000000
+_symmetry_Int_Tables_number   53
+_chemical_formula_structural   PH3O4
+_chemical_formula_sum   'P2 H6 O8'
+_cell_volume   178.64154214
+_cell_formula_units_Z   2
+loop_
+ _symmetry_equiv_pos_site_id
+ _symmetry_equiv_pos_as_xyz
+  1  'x, y, z'
+  2  '-x, -y, -z'
+  3  '-x+1/2, -y, z+1/2'
+  4  'x+1/2, y, -z+1/2'
+  5  'x, -y, -z'
+  6  '-x, y, z'
+  7  '-x+1/2, y, -z+1/2'
+  8  'x+1/2, -y, z+1/2'
+loop_
+ _atom_site_type_symbol
+ _atom_site_label
+ _atom_site_symmetry_multiplicity
+ _atom_site_fract_x
+ _atom_site_fract_y
+ _atom_site_fract_z
+ _atom_site_occupancy
+  P  P0  2  0.00000000  0.50000000  0.50000000  1
+  H  H1  4  0.00000000  0.29937659  0.54466681  1
+  H  H2  2  0.00000000  0.00000000  0.50000000  1
+  O  O3  4  0.00000000  0.42268385  0.28614419  1
+  O  O4  2  0.00000000  0.00000000  0.00000000  1
+  O  O5  2  0.00000000  0.50000000  0.00000000  1

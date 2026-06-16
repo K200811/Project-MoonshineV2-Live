@@ -1,4 +1,3 @@
-import os 
 from huggingface_hub import InferenceClient
 import logging
 import json
@@ -336,6 +335,228 @@ def GammaTwoFunction():
     return result
 
 
+def secondarySuperGammaFunction(Energy, Forces, Stress, Dim, Group, Species, NumIons, formula):
+    messages = [
+        {
+            "role": "system",
+            "content": (
+            "You are an expert materials scientist and solid-state chemist with deep knowledge of "
+            "crystallography, space group theory, crystal structure optimization, and the physical "
+            "meaning of structural energy calculations.\n\n"
+
+            "=== YOUR ROLE ===\n"
+            "You are one step in an iterative crystal structure search loop. In each iteration of this "
+            "loop, a crystal structure is generated using PyXtal (a Python tool that builds atomic "
+            "structures by placing atoms into a repeating unit cell according to a chosen space group's "
+            "symmetry rules), and then that structure is tested using an energy minimization calculation "
+            "to see how physically stable and realistic it is. You will be given the parameters that "
+            "defined the LAST structure that was generated, along with the test results from that "
+            "structure. Your job is to analyze those results using your chemistry and crystallography "
+            "knowledge and decide what the parameters for the NEXT structure should be, with the goal of "
+            "finding the most thermodynamically stable structure possible.\n\n"
+
+            "=== UNDERSTANDING YOUR INPUTS ===\n"
+            "You will receive six pieces of information describing the last structure and how it performed.\n\n"
+
+            "The first four are the PyXtal parameters that were used to generate the last structure:\n\n"
+
+            "1. Dim — The dimensionality of the last structure. Almost always 3, meaning a normal "
+            "repeating 3D bulk crystal. A value of 2 would mean a layered 2D material, 1 would mean a "
+            "chain or rod, and 0 would mean an isolated cluster.\n\n"
+
+            "2. Space Group — An integer from 1 to 230 (for a 3D structure) that identifies which of the "
+            "230 possible 3D crystal symmetry patterns was used. A space group is a standardized "
+            "mathematical description of a set of symmetry operations (rotations, reflections, glide "
+            "planes, screw axes) that defines how a small group of atoms is repeated and arranged to fill "
+            "3D space and form a crystal. The choice of space group determines how many atoms of each "
+            "type can be placed in the unit cell and where they can sit.\n\n"
+
+            "3. Species — The list of chemical elements present in the structure, written as standard "
+            "periodic table symbols (e.g., ['Cu', 'C', 'O', 'H']).\n\n"
+
+            "4. NumIons — A list of integers, one per element in Species, giving the total number of "
+            "atoms of each element that were placed inside the unit cell. The order of NumIons matches "
+            "the order of Species exactly (NumIons[0] is the count for Species[0], etc.).\n\n"
+
+            "The next three are the physical test results from running an energy minimization calculation "
+            "(a mathematical process that nudges all the atoms toward their lowest-energy positions "
+            "within the structure) on the structure PyXtal generated:\n\n"
+
+            "5. Energy — The total calculated energy of the structure after minimization, typically "
+            "reported in electron-volts (eV) or eV per atom. This is the most important indicator of "
+            "thermodynamic stability. A lower (more negative) energy means the structure is more "
+            "stable — the atoms are in a more favorable arrangement relative to being separated. A very "
+            "high (less negative or even positive) energy means the structure is strained, unrealistic, "
+            "or physically implausible.\n\n"
+
+            "6. Forces — A measure of how much residual force is acting on each atom after minimization, "
+            "typically in eV/Angstrom. Ideally, after a successful minimization, forces on all atoms "
+            "should be very close to zero, meaning every atom has settled into a true energy minimum. "
+            "Large residual forces mean the structure did not fully relax — the atoms are still being "
+            "pushed or pulled by their neighbors, which is a sign that the atomic arrangement was "
+            "physically unrealistic or that the structure became trapped in a high-energy local minimum "
+            "during relaxation rather than finding the true lowest-energy arrangement.\n\n"
+
+            "7. Stress — A measure of the internal mechanical tension or compression remaining in the "
+            "unit cell after minimization, typically reported in kilobars (kbar) or GPa. Ideally, after "
+            "a successful minimization, stress should be close to zero, meaning the unit cell size and "
+            "shape are also at their optimal values. Large residual stress means the unit cell dimensions "
+            "are still wrong for the atomic arrangement — the atoms are being squeezed too tightly "
+            "together or are too far apart — which is another sign of an unrealistic or trapped "
+            "structure.\n\n"
+
+            "=== HOW TO INTERPRET THE TEST RESULTS AND DECIDE WHAT TO CHANGE ===\n"
+            "Your goal is to propose new PyXtal parameters that are more likely to produce a structure "
+            "with a lower (more negative) energy, near-zero residual forces, and near-zero residual "
+            "stress than the last structure achieved. Use the following chemistry and crystallography "
+            "reasoning to guide your decision:\n\n"
+
+            "Energy interpretation:\n"
+            "- If the energy is very high (close to zero or positive), the last structure was likely "
+            "very poor — badly distorted, with atoms too close together or in chemically unreasonable "
+            "positions. This suggests the space group chosen imposed symmetry constraints that forced "
+            "atoms into unfavorable positions, OR that NumIons produced a unit cell that was too crowded "
+            "or too sparse. You should consider trying a significantly different space group, or adjusting "
+            "Z (the number of formula units in the unit cell, which scales all of NumIons) to change the "
+            "packing.\n"
+            "- If the energy is moderately low but not as low as you would expect for this compound type, "
+            "the structure may be in a local minimum — a somewhat stable arrangement but not the global "
+            "best. Consider trying a closely related space group (e.g., a subgroup or supergroup of the "
+            "current one) that allows slightly different atomic arrangements, which may let the structure "
+            "escape toward a lower energy.\n"
+            "- If the energy is already very low and close to what you would expect for this compound "
+            "based on known similar materials, you may only need to make small refinements, such as "
+            "trying a slightly different Z or a closely related space group to confirm you are near the "
+            "true global minimum.\n\n"
+
+            "Forces interpretation:\n"
+            "- Large residual forces (e.g., above ~0.1 eV/Angstrom as a rough guideline) mean the "
+            "minimization did not converge to a true energy minimum. This often indicates the initial "
+            "structure from PyXtal was so geometrically unreasonable that the minimizer could not find a "
+            "valid low-energy arrangement from it. A different space group that imposes different "
+            "geometric constraints may produce a better starting structure that the minimizer can "
+            "actually relax properly.\n"
+            "- Near-zero forces combined with a high energy is a warning sign that the structure "
+            "converged to a local minimum rather than the global minimum — it found a stable point, but "
+            "not the best one. Explore different space groups or Z values.\n\n"
+
+            "Stress interpretation:\n"
+            "- Large residual stress means the unit cell volume or shape is wrong for the arrangement of "
+            "atoms. This can happen when NumIons places too many or too few atoms in the unit cell "
+            "(making the effective atomic density too high or too low), or when the space group imposes "
+            "a cell shape (e.g., cubic, hexagonal, orthorhombic) that is incompatible with how these "
+            "atoms naturally want to pack. If stress is large, consider whether a different space group "
+            "with a different cell geometry or a different Z value would better match the natural packing "
+            "density of this compound.\n\n"
+
+            "General space group reasoning:\n"
+            "Higher-symmetry space groups (higher numbers generally, but specifically those with many "
+            "symmetry operations like cubic groups 195-230, hexagonal/trigonal groups, etc.) impose "
+            "stronger constraints on where atoms can sit. This can be beneficial if the compound truly "
+            "has high symmetry, but harmful if the real structure has lower symmetry — forcing artificial "
+            "constraints can prevent the structure from adopting its natural geometry. If the last "
+            "structure performed poorly, consider whether moving to a lower-symmetry space group in the "
+            "same crystal system, or a different crystal system entirely, might allow a more natural "
+            "atomic arrangement. Base this on your chemical knowledge of what kinds of structures are "
+            "known for compounds with this element combination and stoichiometry.\n\n"
+
+            "=== WHAT YOU ARE ALLOWED TO CHANGE ===\n"
+            "You may suggest changes to any of the four PyXtal parameters:\n"
+            "- Dim: In almost all cases this should stay at 3. Only suggest changing it if the energy "
+            "results and compound type strongly suggest the material is layered (Dim=2) or chain-like "
+            "(Dim=1).\n"
+            "- Group: You may suggest any space group number valid for the Dim you choose. Base your "
+            "choice on chemical reasoning about what space group is likely to produce a better structure "
+            "for this compound, informed by the test results from the last iteration.\n"
+            "- Species: This should NOT change unless you have identified a reason to believe the "
+            "original formula was misinterpreted. The elements present in the compound are fixed by its "
+            "chemistry. Keep Species the same as it was in the last structure.\n"
+            "- NumIons: You may change this by choosing a different Z value (number of formula units per "
+            "unit cell) and multiplying all base atom counts by the new Z. Always ensure that the new "
+            "NumIons values are compatible with the Wyckoff position multiplicities available in the new "
+            "Group you are proposing (as explained below).\n\n"
+
+            "=== CRITICAL WYCKOFF CONSTRAINT (DO NOT VIOLATE THIS) ===\n"
+            "Within each space group, atoms can only be placed at certain symmetry-allowed positions "
+            "called Wyckoff positions, each of which has a fixed 'multiplicity' — a fixed minimum number "
+            "of atoms that must be placed together at that site because the space group's symmetry "
+            "operations automatically generate copies of every atom. For example, a particular Wyckoff "
+            "position might have multiplicity 4, meaning if you place one atom there, the symmetry "
+            "automatically creates 3 more copies, giving 4 atoms total at that site. PyXtal builds the "
+            "structure by decomposing the NumIons count for each element into a sum of Wyckoff "
+            "multiplicities. If a NumIons value cannot be formed by adding together any combination of "
+            "the available Wyckoff multiplicities for the chosen space group, PyXtal cannot place those "
+            "atoms and will crash. Before finalizing your answer, verify mentally that every value in "
+            "your proposed NumIons list can be decomposed into a valid combination of Wyckoff "
+            "multiplicities for your proposed Group. If not, adjust Z or choose a different Group.\n\n"
+
+            "=== STEP-BY-STEP REASONING PROCESS ===\n"
+            "Work through the following steps before giving your answer:\n\n"
+
+            "STEP 1 — Assess the quality of the last structure.\n"
+            "Look at the Energy, Forces, and Stress together. Was the last structure good (low energy, "
+            "near-zero forces and stress), mediocre (moderate energy, some residual forces/stress), or "
+            "poor (high energy, large forces and/or stress)? This tells you how much you need to change.\n\n"
+
+            "STEP 2 — Identify the most likely reason the last structure was not optimal.\n"
+            "Based on the test results and your knowledge of the compound's chemistry, reason about why "
+            "the last space group and NumIons combination produced the result it did. Was the space group "
+            "probably too high in symmetry? Too low? Did the unit cell likely have the wrong number of "
+            "atoms (Z too large or too small)? Were atoms likely forced into geometrically unreasonable "
+            "positions?\n\n"
+
+            "STEP 3 — Decide on the new Space Group.\n"
+            "Choose a new Group based on your reasoning from Step 2 and your knowledge of what space "
+            "groups are commonly observed in real compounds with this element combination and "
+            "stoichiometry. If the last result was very poor, consider a substantially different space "
+            "group. If it was close to good, try a closely related one.\n\n"
+
+            "STEP 4 — Determine the new Z and compute new NumIons.\n"
+            "Choose a Z value appropriate for your new space group and the compound type. Multiply every "
+            "base atom count (the smallest whole-number ratio from the chemical formula) by Z to get the "
+            "new NumIons list. Ensure the order of NumIons still matches the order of Species exactly.\n\n"
+
+            "STEP 5 — Verify Wyckoff compatibility.\n"
+            "Confirm that every value in your new NumIons list can be decomposed into valid Wyckoff "
+            "multiplicities for your new Group. If not, adjust Z or choose a different Group and repeat "
+            "from Step 3.\n\n"
+
+            "=== OUTPUT FORMAT (FOLLOW EXACTLY) ===\n"
+            "Return ONLY the following four lines, and nothing else — no explanation, no markdown "
+            "formatting, no code block symbols, no extra text before or after:\n\n"
+            "Dim: <integer>\n"
+            "Group: <integer>\n"
+            "Species: <list of element symbol strings, e.g., ['Cu', 'C', 'O', 'H']>\n"
+            "NumIons: <list of integers, e.g., [4, 2, 10, 4]>"
+
+
+
+
+            ),
+
+        },
+        {
+            "role": "user",
+            "content": "Prompt: Determine the PyXtal Parameters That should be used for the next crystal generation based on the values of thease" 
+            " tests from the last Crystal. Thease were the values of the last crystal: "
+            f"Dim: {Dim}, Space Group: {Group}, Species: {Species}, NumIons: {NumIons} "
+            "Bellow are the tests that were run on the last structure and its results: "
+            f"Energy: {Energy}, Forces: {Forces}, Stress: {Stress}. This is this crystals formula: {formula}"
+            "Figure out what the values for Dim, Space Group, Species, and NumIons should be for the next structure thats generated to create the most "
+            "stable, and most accurate structure possible. "
+        }
+    ]
+
+    response = client.chat_completion(
+        model = "Qwen/Qwen2.5-72B-Instruct",
+        messages = messages,
+        max_tokens = 8000,
+        temperature = 0.2,
+    )
+
+    return response.choices[0].message.content
+
+
 
 
 
@@ -363,9 +584,9 @@ if __name__ == '__main__':
 
         print("\n")
 
-        # InitalSuperGammaResult = InitalSuperGammaFunction(entry["Formula"])
-        # print(f"Formula: {entry["Formula"]}")
-        # #print(f"InitalSuperGammaFunction Result {InitalSuperGammaResult}")
+        InitalSuperGammaResult = InitalSuperGammaFunction(entry["Formula"]) #LLM gives inital values to use in PyXtal Structure Generation
+        print(f"Formula: {entry["Formula"]}")
+        #print(f"InitalSuperGammaFunction Result {InitalSuperGammaResult}")
 
         #__________________________________________________________________________________
         #Value Parsing
@@ -375,21 +596,21 @@ if __name__ == '__main__':
         print("------------------------Value Parsing-----------------------------------")
 
         
-        # Dim = int(SubGammaFunction(InitalSuperGammaResult, "Dim:", "Group"))
-        # print(f"Dim:{Dim}")
+        Dim = int(SubGammaFunction(InitalSuperGammaResult, "Dim:", "Group"))
+        print(f"Dim:{Dim}")
 
-        # Group = int(SubGammaFunction(InitalSuperGammaResult, "Group:", "Species"))
-        # print(f"Group:{Group}")
+        Group = int(SubGammaFunction(InitalSuperGammaResult, "Group:", "Species"))
+        print(f"Group:{Group}")
 
-        # SpeciesSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "Species:", "NumIons").replace("'", '"')
-        # print(f"SpeciesSubGammFunctionResult:{SpeciesSubGammaFunctionResult}")
-        # Species = json.loads(SpeciesSubGammaFunctionResult)
-        # print(f"Species:{Species}")
+        SpeciesSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "Species:", "NumIons").replace("'", '"')
+        print(f"SpeciesSubGammFunctionResult:{SpeciesSubGammaFunctionResult}")
+        Species = json.loads(SpeciesSubGammaFunctionResult)
+        print(f"Species:{Species}")
 
-        # NumIonsSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "NumIons:", "end").replace("'", '"')
-        # print(f"NumIonsSubGammFunctionResult: {NumIonsSubGammaFunctionResult}")
-        # NumIons = json.loads(NumIonsSubGammaFunctionResult)
-        # print(f"NumIons:{NumIons}")
+        NumIonsSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "NumIons:", "end").replace("'", '"')
+        print(f"NumIonsSubGammFunctionResult: {NumIonsSubGammaFunctionResult}")
+        NumIons = json.loads(NumIonsSubGammaFunctionResult)
+        print(f"NumIons:{NumIons}")
         
 
         #____________________________________________________________________________________
@@ -398,92 +619,96 @@ if __name__ == '__main__':
 
         #Temp Values for structure gen so we dont have to use AI credits every test
 
-        Dim = 3
-        Group = 122
-        Species = ["N", "H", "P", "O"]
-        NumIons = [4, 24, 4, 16]
+        # Dim = 3
+        # Group = 122
+        # Species = ["N", "H", "P", "O"]
+        # NumIons = [4, 24, 4, 16]
         
 
 
         #___________________________________________
 
-        # print("\n")
+        print("\n")
         # print("--------------------Crystal Structure generation---------------------------")
-        # GammaOneFunctionCrystalStructure = GammaOneFunction(Dim, Group, Species, NumIons)
-        # print(f"GammaOneFunction Crystal Strucutre Information {GammaOneFunctionCrystalStructure}")
-        # print(f"Formula: {GammaOneFunctionCrystalStructure.formula}")
-        # print(f"Atoms: {GammaOneFunctionCrystalStructure.numIons}")
-        # print(f"Space Groups: {GammaOneFunctionCrystalStructure.group}")
+        GammaOneFunctionCrystalStructure = GammaOneFunction(Dim, Group, Species, NumIons)
+        print(f"GammaOneFunction Crystal Strucutre Information {GammaOneFunctionCrystalStructure}")
+        print(f"Formula: {GammaOneFunctionCrystalStructure.formula}")
+        print(f"Atoms: {GammaOneFunctionCrystalStructure.numIons}")
+        print(f"Space Groups: {GammaOneFunctionCrystalStructure.group}")
 
-        # GammaOneFunctionCrystalStructure.to_file("PyXtalStructure.cif")
+        GammaOneFunctionCrystalStructure.to_file(f"PyXtalStructure.cif")
 
-    #______________________________________________________________________________________________
+        #______________________________________________________________________________________________
 
-    print("\n")
-
-    print("----------------------------------------- CHGNet Relaxation ----------------------------------------------------")
-
-    print("\n")
-
-
-    # CHGNet Relaxation
-
-
-
-    GammaTwoFunctionResult = GammaTwoFunction()
-    print(f"GammaTwoFunction result: {GammaTwoFunctionResult}")
-
-
-    #__________________________________________________________________
-
-    # Relaxation results printing and parsing
-
-    Relaxed_Structure = GammaTwoFunctionResult["final_structure"]
-    print(f"Relaxed Structure: {Relaxed_Structure}")
-    Total_Energy = GammaTwoFunctionResult["total_energy"]
-    print(f"Total Energy: {Total_Energy}")
-    ForcesArray = GammaTwoFunctionResult["forces"]
-    print(f"ForcesArray: {ForcesArray}")
-    StressArrays = GammaTwoFunctionResult["stress"]
-    print(f"StressArray: {StressArrays}")
-    # Chech to see if we can get individual stress numbers print(f"stress[0][0]: {Stress[0][0]}")
-
-
-#________________________________________________________________
-
-    StressTestPass = True
-
-
-    # Stress Test
-    for i in range (len(StressArrays)):
-        SubStressArray = StressArrays[i]
-        for j in range (len(SubStressArray)):
-            print(f"Testing Stress of: {SubStressArray[j]}")
-            print("\n")
-            if abs(SubStressArray[j]) > 0.1:
-                StressTestPass = False
-                print(f" Stress Test failed for {SubStressArray[j]}")
-
-
-
-#_____________________________________________________________________
-
-    ForcesTestPass = True
-
-    # Forces Test
-    for i in range (len(ForcesArray)):
-        SubForcesArray = ForcesArray[i]
-        for j in range (len(SubForcesArray)):
-            print(f"Testing Forces of: {SubForcesArray[j]}")
-            print("\n")
-            if abs(SubForcesArray[j]) > 0.1:
-                ForcesTestPass = False
-                print(f" Forces Test failed for {SubForcesArray[j]}")
-
-
-    if StressTestPass == True and ForcesTestPass == True:
-        export_structure_file = CifWriter(Relaxed_Structure, symprec=0.1)
-        export_structure_file.write_file(f"relaxedStructure_{entry['Formula']}.cif")
         print("\n")
+
+        print("----------------------------------------- CHGNet Relaxation ----------------------------------------------------")
+
         print("\n")
-        print(f"{entry['Formula']} passed and the structure was created")
+
+
+        # --------------------- CHGNet Relaxation --------------------------
+        GammaTwoFunctionResult = GammaTwoFunction()
+        print(f"GammaTwoFunction result: {GammaTwoFunctionResult}")
+        #__________________________________________________________________
+
+        # Relaxation results printing and parsing
+
+        Relaxed_Structure = GammaTwoFunctionResult["final_structure"]
+        print(f"Relaxed Structure: {Relaxed_Structure}")
+        Total_Energy = GammaTwoFunctionResult["total_energy"]
+        print(f"Total Energy: {Total_Energy}")
+        ForcesArray = GammaTwoFunctionResult["forces"]
+        print(f"ForcesArray: {ForcesArray}")
+        StressArrays = GammaTwoFunctionResult["stress"]
+        print(f"StressArray: {StressArrays}")
+        # Chech to see if we can get individual stress numbers print(f"stress[0][0]: {Stress[0][0]}")
+
+
+        #________________________________________________________________
+
+        StressTestPass = True
+
+
+        # Stress Test
+        for i in range (len(StressArrays)):
+            SubStressArray = StressArrays[i]
+            for j in range (len(SubStressArray)):
+                print(f"Testing Stress of: {SubStressArray[j]}")
+                print("\n")
+                if abs(SubStressArray[j]) > 0.1:
+                    StressTestPass = False
+                    print(f" Stress Test failed for {SubStressArray[j]}")
+
+
+
+        #_____________________________________________________________________
+
+
+        endSecondaryLoop = True # Set to true right now so we can run onece and see output
+        itteration = 0
+
+        ForcesTestPass = True
+
+        # Forces Test
+        for i in range (len(ForcesArray)):
+            SubForcesArray = ForcesArray[i]
+            for j in range (len(SubForcesArray)):
+                print(f"Testing Forces of: {SubForcesArray[j]}")
+                print("\n")
+                if abs(SubForcesArray[j]) > 0.1:
+                    ForcesTestPass = False
+                    print(f" Forces Test failed for {SubForcesArray[j]}")
+
+
+        if StressTestPass == True and ForcesTestPass == True:
+            export_structure_file = CifWriter(Relaxed_Structure, symprec=0.1)
+            export_structure_file.write_file(f"relaxedStructure_{entry['Formula']}.cif")
+            print("\n")
+            print("\n")
+            print(f"{entry['Formula']} passed and the structure was created")
+            #Dont have enough credits to test and build this
+        # else: # Secondary Loops that tries to come up with best results with this structure
+        #     while not endSecondaryLoop or itteration < 10: #Want to run loop when ending is set to false / no / dont end OR if we have gon through this loop over 9 times and we are getting nowhere
+        #         secondarySuperGammaFunctionResult = secondarySuperGammaFunction(Total_Energy, ForcesArray, StressArrays, Dim, Group, Species, NumIons, entry['Formula'] )
+        #         print (secondarySuperGammaFunctionResult)
