@@ -1,12 +1,19 @@
 [
     {
-        "Index": 2,
-        "Formula": "H3PO4",
+        "Index": 1,
+        "Formula": "NH4H2PO4",
         "Score": "98"
     },
     {
+        "Index": 2,
+        "Formula": "Cu2CO3(OH)2",
+        "Score": "95"
+    },
+    {
         "Index": 3,
-        "Formula": "LiH2PO4",
-        "Score": "98"
+        "Formula": "LiH6PO4",
+        "Score": 56
+
     }
+
 ]

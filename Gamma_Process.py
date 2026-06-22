@@ -19,6 +19,8 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from chgnet.model.dynamics import CHGNetCalculator
 from ase.constraints import FixSymmetry
 from ase.optimize import FIRE
+from ase.optimize import LBFGS
+from ase.filters import ExpCellFilter
 from ase.filters import FrechetCellFilter
 
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -309,12 +311,56 @@ def GammaTwoFunction():
     ecf = FrechetCellFilter(ase_atoms)
 
     optimizer = FIRE(ecf, logfile=None)
-    optimizer.run(fmax=0.1, steps=500)
+    optimizer.run(fmax=0.001, steps=3000)
 
     final_structure = adapter.get_structure(ase_atoms)
     crystal_info = ase_atoms.calc.results
 
     analizer = SpacegroupAnalyzer(final_structure, symprec = 0.1)
+    print(f"Dected Space Group: {analizer.get_space_group_symbol()}")
+
+
+    correct_structure = analizer.get_symmetrized_structure()
+
+
+    total_engery = crystal_info["energy"]
+    forces = crystal_info["forces"]
+    stress = crystal_info["stress"]
+
+    result = {
+        "final_structure": correct_structure,
+        "total_energy": total_engery,
+        "forces": forces,
+        "stress": stress
+    }
+
+    return result
+
+def GammaThreeFunction(file):
+
+    print(f"CUDA avaliblity check: {torch.cuda.is_available()}")
+
+    structure = Structure.from_file(file)
+
+    adapter = AseAtomsAdaptor()
+    ase_atoms = adapter.get_atoms(structure)
+
+    chgnet_model = CHGNet.load()
+    calculator = CHGNetCalculator(model=chgnet_model)
+    ase_atoms.calc = calculator
+
+    symmetry_constraint = FixSymmetry(ase_atoms)
+    ase_atoms.set_constraint(symmetry_constraint)
+
+    ecf = ExpCellFilter(ase_atoms)
+
+    optimizer = LBFGS(ecf, logfile=None)
+    optimizer.run(fmax=0.001, steps=2000)
+
+    final_structure = adapter.get_structure(ase_atoms)
+    crystal_info = ase_atoms.calc.results
+
+    analizer = SpacegroupAnalyzer(final_structure, symprec = 0.01)
     print(f"Dected Space Group: {analizer.get_space_group_symbol()}")
 
 
@@ -572,6 +618,7 @@ def secondarySuperGammaFunction(Energy, Forces, Stress, Dim, Group, Species, Num
 if __name__ == '__main__':
 
     Beta_Array = []
+    GammaArray = []
 
     with open("BetaFile", "r", encoding = "utf-8") as file:
         Beta_Array = json.load(file)
@@ -627,9 +674,9 @@ if __name__ == '__main__':
 
 
         #___________________________________________
-
+        #MUTENG EVERYTHNG NOW SO WE ONLY RUN GAMMA 3
         print("\n")
-        # print("--------------------Crystal Structure generation---------------------------")
+        print("--------------------Crystal Structure generation---------------------------")
         GammaOneFunctionCrystalStructure = GammaOneFunction(Dim, Group, Species, NumIons)
         print(f"GammaOneFunction Crystal Strucutre Information {GammaOneFunctionCrystalStructure}")
         print(f"Formula: {GammaOneFunctionCrystalStructure.formula}")
@@ -646,7 +693,7 @@ if __name__ == '__main__':
 
         print("\n")
 
-
+        #MUTE EVERYTHING ELSE FOR NOW
         # --------------------- CHGNet Relaxation --------------------------
         GammaTwoFunctionResult = GammaTwoFunction()
         print(f"GammaTwoFunction result: {GammaTwoFunctionResult}")
@@ -701,14 +748,93 @@ if __name__ == '__main__':
                     print(f" Forces Test failed for {SubForcesArray[j]}")
 
 
-        if StressTestPass == True and ForcesTestPass == True:
+        if StressTestPass == True and ForcesTestPass == True and ((Total_Energy / len(Relaxed_Structure)) < 0):
             export_structure_file = CifWriter(Relaxed_Structure, symprec=0.1)
             export_structure_file.write_file(f"relaxedStructure_{entry['Formula']}.cif")
+            print(f"Ev/atom:{Total_Energy / len(Relaxed_Structure)} ")
             print("\n")
             print("\n")
             print(f"{entry['Formula']} passed and the structure was created")
+
+            RunGammaThree = True
+
+        # --------------------------------------- Gamma Three function -----------------------------------------------------------------
+        RunGammaThree = True # Temporary
+        if RunGammaThree:
+            print("\n")
+            print("------------------------- Running Gamma Three ---------------------")
+            GammaThreeFunctionResult = GammaThreeFunction(f"relaxedStructure_{entry["Formula"]}.cif")
+            print(f"GammaThreeFunction result: {GammaThreeFunctionResult}")
+            #__________________________________________________________________
+
+            # Relaxation results printing and parsing
+
+            Finnal_Relaxed_Structure = GammaThreeFunctionResult["final_structure"]
+            print(f"Relaxed Structure: {Finnal_Relaxed_Structure}")
+            Total_Energy = GammaThreeFunctionResult["total_energy"]
+            print(f"Total Energy: {Total_Energy}")
+            ForcesArray = GammaThreeFunctionResult["forces"]
+            print(f"ForcesArray: {ForcesArray}")
+            StressArrays = GammaThreeFunctionResult["stress"]
+            print(f"StressArray: {StressArrays}")
+            # Chech to see if we can get individual stress numbers print(f"stress[0][0]: {Stress[0][0]}")
+
+
+            #________________________________________________________________
+
+            StressTestPass = True
+
+
+            # Stress Test
+            for i in range (len(StressArrays)):
+                SubStressArray = StressArrays[i]
+                for j in range (len(SubStressArray)):
+                    print(f"Testing Stress of: {SubStressArray[j]}")
+                    print("\n")
+                    if abs(SubStressArray[j]) > 0.1:
+                        StressTestPass = False
+                        print(f" Stress Test failed for {SubStressArray[j]}")
+
+
+
+            #_____________________________________________________________________
+
+
+            endSecondaryLoop = True # Set to true right now so we can run onece and see output
+            itteration = 0
+
+            ForcesTestPass = True
+
+            # Forces Test
+            for i in range (len(ForcesArray)):
+                SubForcesArray = ForcesArray[i]
+                for j in range (len(SubForcesArray)):
+                    print(f"Testing Forces of: {SubForcesArray[j]}")
+                    print("\n") 
+                    if abs(SubForcesArray[j]) > 0.1:
+                        ForcesTestPass = False
+                        print(f" Forces Test failed for {SubForcesArray[j]}")
+
+
+            if StressTestPass == True and ForcesTestPass == True:
+                export_structure_file = CifWriter(Finnal_Relaxed_Structure, symprec=0.1)
+                export_structure_file.write_file(f"Final_relaxedStructure_{entry['Formula']}.cif")
+                print("\n")
+                print("\n")
+                print(f"{entry['Formula']} passed and the structure was created")
+                GammaArray.append(entry['Formula'])
+
+        #_________________________________________________________________________
+        
+        
+
+
+
             #Dont have enough credits to test and build this
         # else: # Secondary Loops that tries to come up with best results with this structure
         #     while not endSecondaryLoop or itteration < 10: #Want to run loop when ending is set to false / no / dont end OR if we have gon through this loop over 9 times and we are getting nowhere
         #         secondarySuperGammaFunctionResult = secondarySuperGammaFunction(Total_Energy, ForcesArray, StressArrays, Dim, Group, Species, NumIons, entry['Formula'] )
         #         print (secondarySuperGammaFunctionResult)
+
+    with open("GammaFile", "w") as json_file:
+        json.dump(GammaArray, json_file, indent=4)
