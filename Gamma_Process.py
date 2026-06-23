@@ -20,7 +20,7 @@ from chgnet.model.dynamics import CHGNetCalculator
 from ase.constraints import FixSymmetry
 from ase.optimize import FIRE
 from ase.optimize import LBFGS
-from ase.filters import ExpCellFilter
+from ase.filters import UnitCellFilter
 from ase.filters import FrechetCellFilter
 
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -308,15 +308,15 @@ def GammaTwoFunction():
     symmetry_constraint = FixSymmetry(ase_atoms)
     ase_atoms.set_constraint(symmetry_constraint)
 
-    ecf = FrechetCellFilter(ase_atoms)
+    ecf = UnitCellFilter(ase_atoms)
 
     optimizer = FIRE(ecf, logfile=None)
-    optimizer.run(fmax=0.001, steps=3000)
+    optimizer.run(fmax=0.01, steps=3000)
 
     final_structure = adapter.get_structure(ase_atoms)
     crystal_info = ase_atoms.calc.results
 
-    analizer = SpacegroupAnalyzer(final_structure, symprec = 0.1)
+    analizer = SpacegroupAnalyzer(final_structure, symprec = 0.2)
     print(f"Dected Space Group: {analizer.get_space_group_symbol()}")
 
 
@@ -352,15 +352,15 @@ def GammaThreeFunction(file):
     symmetry_constraint = FixSymmetry(ase_atoms)
     ase_atoms.set_constraint(symmetry_constraint)
 
-    ecf = ExpCellFilter(ase_atoms)
+    ecf = FrechetCellFilter(ase_atoms)
 
     optimizer = LBFGS(ecf, logfile=None)
-    optimizer.run(fmax=0.001, steps=2000)
+    optimizer.run(fmax=0.0001, steps=5000)
 
     final_structure = adapter.get_structure(ase_atoms)
     crystal_info = ase_atoms.calc.results
 
-    analizer = SpacegroupAnalyzer(final_structure, symprec = 0.01)
+    analizer = SpacegroupAnalyzer(final_structure, symprec = 0.001)
     print(f"Dected Space Group: {analizer.get_space_group_symbol()}")
 
 
@@ -631,33 +631,33 @@ if __name__ == '__main__':
 
         print("\n")
 
-        InitalSuperGammaResult = InitalSuperGammaFunction(entry["Formula"]) #LLM gives inital values to use in PyXtal Structure Generation
-        print(f"Formula: {entry["Formula"]}")
-        #print(f"InitalSuperGammaFunction Result {InitalSuperGammaResult}")
+        # InitalSuperGammaResult = InitalSuperGammaFunction(entry["Formula"]) #LLM gives inital values to use in PyXtal Structure Generation
+        # print(f"Formula: {entry["Formula"]}")
+        # #print(f"InitalSuperGammaFunction Result {InitalSuperGammaResult}")
 
-        #__________________________________________________________________________________
-        #Value Parsing
+        # #__________________________________________________________________________________
+        # #Value Parsing
 
-        print("\n")
+        # print("\n")
 
-        print("------------------------Value Parsing-----------------------------------")
+        # print("------------------------Value Parsing-----------------------------------")
 
         
-        Dim = int(SubGammaFunction(InitalSuperGammaResult, "Dim:", "Group"))
-        print(f"Dim:{Dim}")
+        # Dim = int(SubGammaFunction(InitalSuperGammaResult, "Dim:", "Group"))
+        # print(f"Dim:{Dim}")
 
-        Group = int(SubGammaFunction(InitalSuperGammaResult, "Group:", "Species"))
-        print(f"Group:{Group}")
+        # Group = int(SubGammaFunction(InitalSuperGammaResult, "Group:", "Species"))
+        # print(f"Group:{Group}")
 
-        SpeciesSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "Species:", "NumIons").replace("'", '"')
-        print(f"SpeciesSubGammFunctionResult:{SpeciesSubGammaFunctionResult}")
-        Species = json.loads(SpeciesSubGammaFunctionResult)
-        print(f"Species:{Species}")
+        # SpeciesSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "Species:", "NumIons").replace("'", '"')
+        # print(f"SpeciesSubGammFunctionResult:{SpeciesSubGammaFunctionResult}")
+        # Species = json.loads(SpeciesSubGammaFunctionResult)
+        # print(f"Species:{Species}")
 
-        NumIonsSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "NumIons:", "end").replace("'", '"')
-        print(f"NumIonsSubGammFunctionResult: {NumIonsSubGammaFunctionResult}")
-        NumIons = json.loads(NumIonsSubGammaFunctionResult)
-        print(f"NumIons:{NumIons}")
+        # NumIonsSubGammaFunctionResult = SubGammaFunction(InitalSuperGammaResult, "NumIons:", "end").replace("'", '"')
+        # print(f"NumIonsSubGammFunctionResult: {NumIonsSubGammaFunctionResult}")
+        # NumIons = json.loads(NumIonsSubGammaFunctionResult)
+        # print(f"NumIons:{NumIons}")
         
 
         #____________________________________________________________________________________
@@ -666,10 +666,10 @@ if __name__ == '__main__':
 
         #Temp Values for structure gen so we dont have to use AI credits every test
 
-        # Dim = 3
-        # Group = 122
-        # Species = ["N", "H", "P", "O"]
-        # NumIons = [4, 24, 4, 16]
+        Dim = 3
+        Group = 122
+        Species = ["N", "H", "P", "O"]
+        NumIons = [4, 24, 4, 16]
         
 
 
