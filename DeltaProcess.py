@@ -6,6 +6,8 @@ from pymatgen.analysis.local_env import CrystalNN
 from pymatgen.analysis.chemenv.coordination_environments.chemenv_strategies import SimplestChemenvStrategy
 from pymatgen.analysis.chemenv.coordination_environments.coordination_geometry_finder import LocalGeometryFinder
 from pymatgen.analysis.chemenv.coordination_environments.structure_environments import LightStructureEnvironments
+from pymatgen.ext.matproj import MPRester
+from pymatgen.analysis.structure_matcher import StructureMatcher
 
 
 import math
@@ -17,6 +19,8 @@ import warnings
 
 import json
 import sys
+
+MP_API_KEY = ""
 
 
 CoordinationNumberLimitsPerElement = {
@@ -279,10 +283,12 @@ def CoordinationNumbersTest (file): #Make sure the final input is the oxidized s
     print("Full coordination numbers check passed")
     return True
 
+#_________________________________________________________________________________
 
-
-def GeometryCheck (file, max_allowed_csm):
+def GeometryCheck (file, max_allowed_csm): # Checks if the geometries of bonds and angles created are realsitic
     structure = Structure.from_file(file)
+
+    geometryArray = []
 
     lgf = LocalGeometryFinder() # creates vorroni polyheara netwrok around every atom
     lgf.setup_structure(structure) #centers the calcualtions on our crystal structure
@@ -310,12 +316,45 @@ def GeometryCheck (file, max_allowed_csm):
             return False
         else:
             print(f"{site.species_string} passed local geometry check")
+            result = {
+                "Geometry": site_env[0]['ce_symbol'], 
+                "Element": site.species_string, 
+                "Index": i 
+            }
+            geometryArray.append(result) 
+    
+    with open("DeltaGeometryFile", "w") as json_file:
+        json.dump(geometryArray, json_file, indent=4)
         
     print("Full Geometry Test passed")
     return True
 
-            
+#_____________________________________________________________________________________________
 
+def StructureMatchingTest (file):
+
+    structure = Structure.from_file(file)
+    formula = structure.composition.reduced_formula
+
+    matcher = StructureMatcher()
+    matchFound = False
+
+    with MPRester(MP_API_KEY) as mpr:
+        docs = mpr.summary_search(formula = formula, _fields = ["structure", "material_id"])
+
+        for doc in docs:
+            mp_structure = doc["structure"]
+            mp_id = doc["material_id"]
+
+            if matcher.fit(structure, mp_structure):
+                print(f"Match found, entry ID is {mp_id}")
+                matchFound = True
+                return True
+    if not matchFound:
+        print("No matches in database!")
+        return False
+    
+#_________________________________________________________________________________________
 
 
 
@@ -324,6 +363,7 @@ def GeometryCheck (file, max_allowed_csm):
 if __name__ == "__main__":
 
     GammaArray = []
+    DeltaArray = []
 
     with open("GammaFile", "r", encoding = "utf-8") as file:
         GammaArray = json.load(file)
@@ -388,3 +428,17 @@ if __name__ == "__main__":
         if GeometryCheckResult == False:
             continue
         #all printing takes place in the function
+
+        # ------------------------- Run Structure Matching Test -------------------
+
+        print('\n')
+        print("-------------------------- RUNNING STRUCTURE MATCHING TEST -------------------------")
+        StructureMatchingTestResult = StructureMatchingTest(f"Final_relaxedStructure_{formula}.cif")
+        if StructureMatchingTestResult == True:
+            continue
+        # all printing takes place inside the function
+
+        DeltaArray.append(formula)
+
+    with open("DeltaFile", "w") as json_file:
+        json.dump(DeltaArray, json_file, indent=4)

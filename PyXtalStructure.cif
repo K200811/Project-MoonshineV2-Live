@@ -16,13 +16,13 @@ data_from_pyxtal
 _symmetry_space_group_name_H-M 'I-42d'
 _symmetry_Int_Tables_number                  122
 _symmetry_cell_setting                tetragonal
-_cell_length_a            6.574768
-_cell_length_b            6.574768
-_cell_length_c            4.714402
+_cell_length_a            8.435220
+_cell_length_b            8.435220
+_cell_length_c            5.883634
 _cell_angle_alpha        90.000000
 _cell_angle_beta         90.000000
 _cell_angle_gamma        90.000000
-_cell_volume            203.792191
+_cell_volume            418.637789
 
 loop_
  _symmetry_equiv_pos_site_id
@@ -53,9 +53,9 @@ loop_
  _atom_site_fract_z
  _atom_site_occupancy
 N      N        4     0.000000    0.000000    0.500000 1
-H      H       16     0.146739    0.411320    0.725947 1
-H      H        8     0.000000    0.000000    0.675247 1
+H      H       16     0.475299    0.891438    0.291791 1
+H      H        8     0.398605    0.250000    0.125000 1
 P      P        4     0.000000    0.000000    0.000000 1
-O      O       16     0.210703    0.137862    0.815248 1
+O      O       16     0.982279    0.915858    0.211001 1
 #END
 

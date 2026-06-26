@@ -726,6 +726,7 @@ if __name__ == '__main__':
                 if abs(SubStressArray[j]) > 0.1:
                     StressTestPass = False
                     print(f" Stress Test failed for {SubStressArray[j]}")
+                    continue
 
 
 
@@ -746,6 +747,7 @@ if __name__ == '__main__':
                 if abs(SubForcesArray[j]) > 0.1:
                     ForcesTestPass = False
                     print(f" Forces Test failed for {SubForcesArray[j]}")
+                    continue
 
 
         if StressTestPass == True and ForcesTestPass == True and ((Total_Energy / len(Relaxed_Structure)) < 0):
@@ -794,6 +796,7 @@ if __name__ == '__main__':
                     if abs(SubStressArray[j]) > 0.1:
                         StressTestPass = False
                         print(f" Stress Test failed for {SubStressArray[j]}")
+                        continue
 
 
 
@@ -814,6 +817,7 @@ if __name__ == '__main__':
                     if abs(SubForcesArray[j]) > 0.1:
                         ForcesTestPass = False
                         print(f" Forces Test failed for {SubForcesArray[j]}")
+                        continue
 
 
             if StressTestPass == True and ForcesTestPass == True:
