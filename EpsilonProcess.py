@@ -2,8 +2,39 @@ from pymatgen.core import Structure
 from pymatgen.analysis.local_env import CrystalNN, LocalStructOrderParams
 from pymatgen.analysis.structure_matcher import StructureMatcher
 from pymatgen.ext.matproj import MPRester
+from pymatgen.core.surface import SlabGenerator
+from pymatgen.core.surface import Slab
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatgen.analysis.adsorption import AdsorbateSiteFinder
+
+import numpy as np
 
 import json
+
+import time
+
+start_time = time.perf_counter()
+
+with open("moonshine_data.json", "r") as f:
+    data = json.load(f)
+
+data["payload"]["current_stage"] = "EpsilonProcess"
+
+with open("moonshine_data.json", "w") as f:
+    json.dump(data, f, indent=2)
+
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.bool_):
+            return bool(obj)
+        return super().default(obj)
+        
 
 
 MP_API_KEY = ""
@@ -196,6 +227,7 @@ def prototypeMatching (file):
 
     if not matches:
         print("No prototype matches")
+        data["payload"]["logs"]["warnings"].append("No prototype matches")
         return ("No Matches")
     matches = sorted(matches, key=lambda x: x["rms_score"])
 
@@ -205,9 +237,96 @@ def prototypeMatching (file):
 
 
 
-#___________________________________________________________________________________________
+#______________________________________________________________________________________________________________________________________
+
+def createSlabs (file, MILLERINDEX,filename):
+    structure = Structure.from_file(file)
+
+    millerIndex = MILLERINDEX
+    minSlabSize = 10.0
+    minVacuumSize = 15.0
+
+    slabGenerator = SlabGenerator(
+        initial_structure=structure,
+        miller_index=millerIndex,
+        min_slab_size=minSlabSize,
+        min_vacuum_size=minVacuumSize,
+        center_slab=True   
+    )
+
+    allSlabs = slabGenerator.get_slabs()
+    print(f"Generated {len(allSlabs)} slabs with termination for the miller Index of: {millerIndex} ")
+
+    for i, slab in enumerate(allSlabs):
+        slab.to(filename)
+
+    return len(allSlabs) 
+
+#____________________________________________________________________________________________
 
 
+def slabAnalisis(file, MILLERINDEX):
+
+    structure = Structure.from_file(file)
+
+    slab = Slab(
+        lattice=structure.lattice,
+        species=structure.species,
+        coords=structure.frac_coords,
+        miller_index= MILLERINDEX,
+        oriented_unit_cell= structure,
+        shift=0,
+        scale_factor=np.eye(3, dtype=int)
+    )
+    
+    isSymmetric = slab.is_symmetric()
+    isPolar = slab.is_polar()
+    slabNormal = slab.normal
+    slabShift = slab.shift
+    slabScaleFactor = slab.scale_factor
+    slabCenterOfMass = slab.center_of_mass
+
+    c_coords = [round(site.frac_coords[2],2) for site in slab]
+    layers = sorted(set(c_coords))
+
+    c2_coords = np.array([site.frac_coords[2] for site in slab])
+    topZ = c2_coords.max()
+    botZ = c2_coords.min()
+    tolerance = 0.05
+
+    top_atoms = [slab[i].species_string for i in range(len(slab)) if abs(c2_coords[i] - topZ) < tolerance]
+    bot_atoms = [slab[i].species_string for i in range(len(slab)) if abs(c2_coords[i] - botZ) < tolerance]
+
+    surface_sites = slab.get_surface_sites()
+
+    asf = AdsorbateSiteFinder(slab)
+    adsorption_sites = asf.find_adsorption_sites()
+
+    surfaceArea = slab.surface_area
+
+    result = {
+        "Is Symmetric": isSymmetric,
+        "Is Polar": isPolar,
+        "Slab Normal": slabNormal,
+        "Slab Shift": slabShift,
+        "Slab Scale Factor": slabScaleFactor,
+        "Slab Center Of Mass": slabCenterOfMass,
+        "Slab Layers": layers,
+        "Top Termination Atoms": top_atoms,
+        "Bottom Termination Atoms": bot_atoms,
+        "Surface Sites": surface_sites,
+        "Adsorption Sites": adsorption_sites,
+        "Surface Area": surfaceArea
+    }
+
+    return result
+
+
+
+
+
+
+        
 
 
 
@@ -217,57 +336,147 @@ if __name__ == '__main__':
     DeltaArray = []
     with open("DeltaFile", "r", encoding = "utf-8") as file:
         DeltaArray = json.load(file)
+        UnitCellAnalisisArray = []
+        slabAnalisisArray = []
+        EArray = []
 
     for entry in DeltaArray:
-        print("\n")
-
-        formula = entry
-        #------------------ Density and Volume --------------------
-        print("------------------ Density and Volume --------------------")
-        Density = GetDesity(f"Final_relaxedStructure_{formula}.cif")
-        print (f"Density: {Density}")
-        Volume = getVolume(f"Final_relaxedStructure_{formula}.cif")
-        print(f"Volume: {Volume}")
-
-        #------------------ Lattice Parameters --------------------
-        print("------------------ Lattice Parameters --------------------")
-        LatticeParamerters = getLatticeParameters(f"Final_relaxedStructure_{formula}.cif")
-        print("\n")
-        print(f"Lattice Parameters{LatticeParamerters}")
-
-        #----------------------- Composition -----------------------
-        print("----------------------- Composition -----------------------")
-        compositionResults = getComposition(f"Final_relaxedStructure_{formula}.cif")
-        print("\n")
-        print(f"Composition Results: {compositionResults}")
-
-        #----------------------- Space Group -----------------------
-        print("----------------------- Space Group -----------------------")
-        spaceGroup = getSpaceGroup(f"Final_relaxedStructure_{formula}.cif")
-        print("\n")
-        print(f"Space group: {spaceGroup}")
-
-        #------------------- Local geometry -------------------
-        # localGeometry = getLocalGeometry(f"Final_relaxedStructure_{formula}.cif")
-        # print("\n")
-        # print(f" Local geometry: {localGeometry}")
-
-        #------------------ All Bond Lengths ------------------
-        print("------------------ All Bond Lengths ------------------")
-        BondLengths = GetbondLengths(f"Final_relaxedStructure_{formula}.cif")
-        print("\n")
-        print(f"Bond Lengths: {BondLengths}")
-
-        #------------------ Prototype Matching ----------------
-        print("------------------ Prototype Matching ----------------")
-        prototypeGuess = prototypeMatching(f"Final_relaxedStructure_{formula}.cif")
-        print("\n")
-        print(f"Best Prototype Guess: {prototypeGuess}")
-
-
-        print("\n")
-        print("----------------------------------------------------- Slab Analisis -------------------------------------------")
+        for j in range (5):
         
+
+            print("\n")
+
+            formula = entry
+            #------------------ Density and Volume --------------------
+            print("------------------ Density and Volume --------------------")
+            Density = GetDesity(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print (f"Density: {Density}")
+            Volume = getVolume(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print(f"Volume: {Volume}")
+
+            #------------------ Lattice Parameters --------------------
+            print("------------------ Lattice Parameters --------------------")
+            LatticeParamerters = getLatticeParameters(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print("\n")
+            print(f"Lattice Parameters{LatticeParamerters}")
+
+            #----------------------- Composition -----------------------
+            print("----------------------- Composition -----------------------")
+            compositionResults = getComposition(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print("\n")
+            print(f"Composition Results: {compositionResults}")
+
+            #----------------------- Space Group -----------------------
+            print("----------------------- Space Group -----------------------")
+            spaceGroup = getSpaceGroup(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print("\n")
+            print(f"Space group: {spaceGroup}")
+
+            #------------------- Local geometry -------------------
+            # localGeometry = getLocalGeometry(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            # print("\n")
+            # print(f" Local geometry: {localGeometry}")
+
+            #------------------ All Bond Lengths ------------------
+            print("------------------ All Bond Lengths ------------------")
+            BondLengths = GetbondLengths(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print("\n")
+            print(f"Bond Lengths: {BondLengths}")
+
+            #------------------ Prototype Matching ----------------
+            print("------------------ Prototype Matching ----------------")
+            prototypeGuess = prototypeMatching(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif")
+            print("\n")
+            print(f"Best Prototype Guess: {prototypeGuess}")
+
+            UnitCellAnalisisArray.append({
+                "Formula": formula,
+                "Density": Density,
+                "Volume": Volume,
+                "Lattice Parameters": LatticeParamerters,
+                "Composition": compositionResults,
+                "Space Group": spaceGroup,
+                "Bond Lenghts": BondLengths,
+                "PrototypeMatchingGuess": prototypeGuess
+            })
+
+            print("\n")
+            print("----------------------------------------------------- Slab Analisis -------------------------------------------")
+            #---------------------------------- Slab Creation ---------------------
+            print("---------------------------- Slab Creation ---------------------")
+            print("Creating Slabs of Miller Index (1,1,1)")
+            num_slabs = createSlabs(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif", (1,1,1), f"Slab_{j}_{entry['Formula']}_(1,1,1).cif")
+            #------------------------------------------------------------
+            print("Creating Slabs of Miller Index (1,0,0)")
+            num_slabs2 = createSlabs(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif", (1,0,0), f"Slab_{j}_{entry['Formula']}_(1,0,0).cif")
+            #------------------------------------------------------------
+            print("Creating Slabs of Miller Index (1,1,0)")
+            num_slabs3 = createSlabs(f"Final_relaxedStructure_{entry['Formula']}_{j}.cif", (1,1,0), f"Slab_{j}_{entry['Formula']}_(1,1,0).cif")
+
+            total_number_of_slabs = num_slabs + num_slabs2 + num_slabs3
+            print(f" Total Number Of Slabs {total_number_of_slabs}")
+
+            #----------------------------- Symmetry Analisis ----------------------
+            print("----------------------------- Slab Analisis ----------------------")
+
+            
+
+            for i in range (num_slabs):
+                SlabAnalisisResult = slabAnalisis(f"Slab_{i}_{entry['Formula']}_(1,1,1).cif", (1,1,1))
+                result = {
+                    "File": f"Slab_{i}_{entry['Formula']}_(1,1,1).cif",
+                    "Slab Analisis": SlabAnalisisResult
+                }
+                slabAnalisisArray.append(result)
+
+            for i in range (num_slabs2):
+                SlabAnalisisResult = slabAnalisis(f"Slab_{i}_{entry['Formula']}_(1,0,0).cif", (1,0,0))
+                result = {
+                    "File": f"Slab_{i}_{entry['Formula']}_(1,0,0).cif",
+                    "Slab Analisis": SlabAnalisisResult
+                }
+                slabAnalisisArray.append(result)
+
+            for i in range (num_slabs3):
+                SlabAnalisisResult = slabAnalisis(f"Slab_{i}_{entry['Formula']}_(1,1,0).cif", (1,1,0))
+                result = {
+                    "File": f"Slab_{i}_{entry['Formula']}_(1,1,0).cif",
+                    "Slab Analisis": SlabAnalisisResult
+                }
+                slabAnalisisArray.append(result)
+                
+            print (slabAnalisisArray)
+            EArray.append(formula)
+
+
+
+
+    with open("EpsilonFile_UnitCellAnalisis", "w") as json_file:
+        json.dump(UnitCellAnalisisArray, json_file, indent=4, cls=NumpyEncoder)
+
+    with open("EpsilonFile_SlabAnalisis", "w") as json_file:
+        json.dump(slabAnalisisArray, json_file, indent=4, cls = NumpyEncoder)
+
+
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
+
+    data["payload"]["stage_timing"][4]["seconds"] = execution_time
+
+    for i in range (len(EArray)):
+        data["payload"]["candidates_in_system"] = []
+        data["payload"]["candidates_in_system"].append({
+        "formula": EArray[i], "index": i, "id": f"cand_{i}", "status": "Passed Epsilon"
+        })
+        data["payload"]["logs"]["failed_all"].append(EArray[i])
+
+    with open ("moonshine_data.json", "w") as f:
+        json.dump(data, f, indent=2)
+        
+
+
+    
+
 
 
 

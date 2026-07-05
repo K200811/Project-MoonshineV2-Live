@@ -1,0 +1,273 @@
+[
+    {
+        "Formula": "NH4H2PO4",
+        "Density": 1.7184119673050198,
+        "Volume": 444.6074066872367,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 8.01228972,
+            "LengthYAxis \u00c5 ": 8.01228972,
+            "LengthZAxis \u00c5 ": 6.92569567,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "PH6NO4",
+            "Total Atoms In The Unit Cell": "P4 H24 N4 O16",
+            "Element Counts": {
+                "P": 4.0,
+                "H": 24.0,
+                "N": 4.0,
+                "O": 16.0
+            }
+        },
+        "Space Group": 122,
+        "Bond Lenghts": [
+            {
+                "BondLength": 1.5593548903495944,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495944,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.559354890349595,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.559354890349594,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.559354890349594,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495944,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495944,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495935,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495944,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495948,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.559354890349594,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.559354890349594,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495937,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495942,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.5593548903495944,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.559354890349595,
+                "SiteA": "P",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.0334857621147138,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147138,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147142,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147142,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.033485762114714,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147133,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147138,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147135,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147142,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.033485762114714,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147144,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.033485762114714,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147135,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.033485762114714,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147135,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.0334857621147138,
+                "SiteA": "H",
+                "SiteB": "N"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955714,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955723,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955714,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955723,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955723,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955714,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955714,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955723,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.2061485349955718,
+                "SiteA": "H",
+                "SiteB": "O"
+            }
+        ],
+        "PrototypeMatchingGuess": {
+            "mp_id": "mp-aaacptdw",
+            "prototype_formula": "PH6NO4",
+            "rms_score": 0.1589451561232202
+        }
+    }
+]

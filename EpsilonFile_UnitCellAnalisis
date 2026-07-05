@@ -1,0 +1,1172 @@
+[
+    {
+        "Formula": {
+            "Index": 2,
+            "Formula": "NaCl",
+            "Score": "95"
+        },
+        "Density": 2.0996203948529706,
+        "Volume": 184.88389981964033,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 5.696827,
+            "LengthYAxis \u00c5 ": 5.696827,
+            "LengthZAxis \u00c5 ": 5.696827,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "NaCl",
+            "Total Atoms In The Unit Cell": "Na4 Cl4",
+            "Element Counts": {
+                "Na": 4.0,
+                "Cl": 4.0
+            }
+        },
+        "Space Group": 225,
+        "Bond Lenghts": [
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8484135,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            }
+        ],
+        "PrototypeMatchingGuess": {
+            "mp_id": "mp-aaaabhvi",
+            "prototype_formula": "NaCl",
+            "rms_score": 1.1131036107145986e-16
+        }
+    },
+    {
+        "Formula": {
+            "Index": 2,
+            "Formula": "NaCl",
+            "Score": "95"
+        },
+        "Density": 2.0995814533250154,
+        "Volume": 184.8873289133494,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 5.69686222,
+            "LengthYAxis \u00c5 ": 5.69686222,
+            "LengthZAxis \u00c5 ": 5.69686222,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "NaCl",
+            "Total Atoms In The Unit Cell": "Na4 Cl4",
+            "Element Counts": {
+                "Na": 4.0,
+                "Cl": 4.0
+            }
+        },
+        "Space Group": 225,
+        "Bond Lenghts": [
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84843111,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            }
+        ],
+        "PrototypeMatchingGuess": {
+            "mp_id": "mp-aaaabhvi",
+            "prototype_formula": "NaCl",
+            "rms_score": 1.5700924737538744e-16
+        }
+    },
+    {
+        "Formula": {
+            "Index": 2,
+            "Formula": "NaCl",
+            "Score": "95"
+        },
+        "Density": 2.0995705184694717,
+        "Volume": 184.88829183229674,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 5.69687211,
+            "LengthYAxis \u00c5 ": 5.69687211,
+            "LengthZAxis \u00c5 ": 5.69687211,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "NaCl",
+            "Total Atoms In The Unit Cell": "Na4 Cl4",
+            "Element Counts": {
+                "Na": 4.0,
+                "Cl": 4.0
+            }
+        },
+        "Space Group": 225,
+        "Bond Lenghts": [
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.848436055,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            }
+        ],
+        "PrototypeMatchingGuess": {
+            "mp_id": "mp-aaaabhvi",
+            "prototype_formula": "NaCl",
+            "rms_score": 1.5700924737538744e-16
+        }
+    },
+    {
+        "Formula": {
+            "Index": 2,
+            "Formula": "NaCl",
+            "Score": "95"
+        },
+        "Density": 2.0999612019525697,
+        "Volume": 184.85389462449598,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 5.6965188,
+            "LengthYAxis \u00c5 ": 5.6965188,
+            "LengthZAxis \u00c5 ": 5.6965188,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "NaCl",
+            "Total Atoms In The Unit Cell": "Na4 Cl4",
+            "Element Counts": {
+                "Na": 4.0,
+                "Cl": 4.0
+            }
+        },
+        "Space Group": 225,
+        "Bond Lenghts": [
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.8482594,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            }
+        ],
+        "PrototypeMatchingGuess": {
+            "mp_id": "mp-aaaabhvi",
+            "prototype_formula": "NaCl",
+            "rms_score": 3.140184947507749e-16
+        }
+    },
+    {
+        "Formula": {
+            "Index": 2,
+            "Formula": "NaCl",
+            "Score": "95"
+        },
+        "Density": 2.0996918675564458,
+        "Volume": 184.87760644281045,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 5.69676236,
+            "LengthYAxis \u00c5 ": 5.69676236,
+            "LengthZAxis \u00c5 ": 5.69676236,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "NaCl",
+            "Total Atoms In The Unit Cell": "Na4 Cl4",
+            "Element Counts": {
+                "Na": 4.0,
+                "Cl": 4.0
+            }
+        },
+        "Space Group": 225,
+        "Bond Lenghts": [
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            },
+            {
+                "BondLength": 2.84838118,
+                "SiteA": "Na",
+                "SiteB": "Cl"
+            }
+        ],
+        "PrototypeMatchingGuess": {
+            "mp_id": "mp-aaaabhvi",
+            "prototype_formula": "NaCl",
+            "rms_score": 1.5700924737538744e-16
+        }
+    },
+    {
+        "Formula": {
+            "Index": 6,
+            "Formula": "Ti\u2082O\u2084",
+            "Score": "92"
+        },
+        "Density": 2.541167804059256,
+        "Volume": 104.3774291164114,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 3.74216266,
+            "LengthYAxis \u00c5 ": 3.74216266,
+            "LengthZAxis \u00c5 ": 7.45351747,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "TiO2",
+            "Total Atoms In The Unit Cell": "Ti2 O4",
+            "Element Counts": {
+                "Ti": 2.0,
+                "O": 4.0
+            }
+        },
+        "Space Group": 131,
+        "Bond Lenghts": [
+            {
+                "BondLength": 1.8633793674999994,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8633793675,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.87108133,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.87108133,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8633793675000003,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8633793675000003,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.87108133,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.87108133,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            }
+        ],
+        "PrototypeMatchingGuess": "No Matches"
+    },
+    {
+        "Formula": {
+            "Index": 6,
+            "Formula": "Ti\u2082O\u2084",
+            "Score": "92"
+        },
+        "Density": 2.354733809094367,
+        "Volume": 112.6414210033845,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 3.15568801,
+            "LengthYAxis \u00c5 ": 3.15568801,
+            "LengthZAxis \u00c5 ": 11.31123437,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "TiO2",
+            "Total Atoms In The Unit Cell": "Ti2 O4",
+            "Element Counts": {
+                "Ti": 2.0,
+                "O": 4.0
+            }
+        },
+        "Space Group": 131,
+        "Bond Lenghts": [
+            {
+                "BondLength": 1.8420136844616448,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616448,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616448,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616448,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616448,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616457,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616448,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420136844616457,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            }
+        ],
+        "PrototypeMatchingGuess": "No Matches"
+    },
+    {
+        "Formula": {
+            "Index": 6,
+            "Formula": "Ti\u2082O\u2084",
+            "Score": "92"
+        },
+        "Density": 2.3325424627113764,
+        "Volume": 227.42613828584527,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 4.05077369,
+            "LengthYAxis \u00c5 ": 4.05077369,
+            "LengthZAxis \u00c5 ": 13.86003784,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "TiO2",
+            "Total Atoms In The Unit Cell": "Ti4 O8",
+            "Element Counts": {
+                "Ti": 4.0,
+                "O": 8.0
+            }
+        },
+        "Space Group": 139,
+        "Bond Lenghts": [
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.802769993634799,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.802769993634799,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.802769993634799,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8027699936347992,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 2.025386845,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            }
+        ],
+        "PrototypeMatchingGuess": "No Matches"
+    },
+    {
+        "Formula": {
+            "Index": 6,
+            "Formula": "Ti\u2082O\u2084",
+            "Score": "92"
+        },
+        "Density": 3.8891898262247047,
+        "Volume": 68.19943849297138,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 5.0134404,
+            "LengthYAxis \u00c5 ": 5.0134404,
+            "LengthZAxis \u00c5 ": 2.71337042,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "TiO2",
+            "Total Atoms In The Unit Cell": "Ti2 O4",
+            "Element Counts": {
+                "Ti": 2.0,
+                "O": 4.0
+            }
+        },
+        "Space Group": 127,
+        "Bond Lenghts": [
+            {
+                "BondLength": 1.905336822507392,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.9053368225073917,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.905336822507392,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.9053368225073917,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.905336822507392,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.905336822507392,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.9053368225073917,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.9053368225073917,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            }
+        ],
+        "PrototypeMatchingGuess": "No Matches"
+    },
+    {
+        "Formula": {
+            "Index": 6,
+            "Formula": "Ti\u2082O\u2084",
+            "Score": "92"
+        },
+        "Density": 2.354126826862479,
+        "Volume": 112.67046418845995,
+        "Lattice Parameters": {
+            "LengthXAxis \u00c5 ": 3.15571833,
+            "LengthYAxis \u00c5 ": 3.15571833,
+            "LengthZAxis \u00c5 ": 11.31393342,
+            "Alpha Angle \u00b0 ": 90.0,
+            "Beta Angle \u00b0 ": 90.0,
+            "Gamma Angle \u00b0 ": 90.0
+        },
+        "Composition": {
+            "Reduced Formula": "TiO2",
+            "Total Atoms In The Unit Cell": "Ti2 O4",
+            "Element Counts": {
+                "Ti": 2.0,
+                "O": 4.0
+            }
+        },
+        "Space Group": 131,
+        "Bond Lenghts": [
+            {
+                "BondLength": 1.8420439873967127,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.842043987396713,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.842043987396713,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420439873967127,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420439873967125,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420439873967125,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420439873967127,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            },
+            {
+                "BondLength": 1.8420439873967127,
+                "SiteA": "Ti",
+                "SiteB": "O"
+            }
+        ],
+        "PrototypeMatchingGuess": "No Matches"
+    }
+]

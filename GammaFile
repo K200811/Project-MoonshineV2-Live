@@ -1,5 +1,22 @@
 [
-    "NH4H2PO4",
-    "Cu2CO3(OH)2",
-    "LiH6PO4"
+    {
+        "Index": 1,
+        "Formula": "Si",
+        "Score": "95"
+    },
+    {
+        "Index": 2,
+        "Formula": "NaCl",
+        "Score": "95"
+    },
+    {
+        "Index": 3,
+        "Formula": "ZnO",
+        "Score": "95"
+    },
+    {
+        "Index": 4,
+        "Formula": "LiCoO2",
+        "Score": "95"
+    }
 ]

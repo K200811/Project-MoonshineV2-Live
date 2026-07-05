@@ -1,6 +1,14 @@
 import logging
 import json
 import sys
+import time
+
+start_time = time.perf_counter()
+
+with open("moonshine_data.json", "r") as f:
+    data = json.load(f)
+
+data["payload"]["current_stage"] = "AlphaProcess"
 
 #____________________________________
 
@@ -133,19 +141,26 @@ if __name__ == "__main__":
     SuperAlphaCheck()
     SuperAlphaFunction()
     AlphaFunction()
-#_____________________________________________________________
+    currentCandidetsProcessed = data["payload"]["metrics"]["candidates_processed"]
+    newCandidetsProcessed = currentCandidetsProcessed + len(Alpha_Array)
+    data["payload"]["metrics"]["candidates_processed"] = newCandidetsProcessed
 
-#JSON file creation
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
 
-with open("Alpha_Arrays.json", "w") as json_file:
-    json.dump(Alpha_Array, json_file, indent = 4)
+    data["payload"]["stage_timing"][0]["seconds"] = execution_time
+    #_____________________________________________________________
 
-logging.info("Alpha_Arrays.json created")
+    #JSON file creation
+
+    with open("Alpha_Arrays.json", "w") as json_file:
+        json.dump(Alpha_Array, json_file, indent = 4)
+
+    with open ("moonshine_data.json", "w") as f:
+        json.dump(data, f, indent=2)
 
 #______________________________________________________________
 
 
 ##################################################################
-
-
 

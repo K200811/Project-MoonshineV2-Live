@@ -1,142 +1,32 @@
 [
     {
         "Geometry": "T:4",
-        "Element": "P5+",
+        "Element": "Li+",
         "Index": 0
     },
     {
         "Geometry": "T:4",
-        "Element": "P5+",
+        "Element": "Li+",
         "Index": 1
     },
     {
         "Geometry": "T:4",
-        "Element": "P5+",
+        "Element": "Li+",
         "Index": 2
     },
     {
-        "Geometry": "T:4",
-        "Element": "P5+",
+        "Geometry": "T:6",
+        "Element": "Co3+",
         "Index": 3
     },
     {
-        "Geometry": "S:1",
-        "Element": "H+",
+        "Geometry": "T:6",
+        "Element": "Co3+",
         "Index": 4
     },
     {
-        "Geometry": "S:1",
-        "Element": "H+",
+        "Geometry": "T:6",
+        "Element": "Co3+",
         "Index": 5
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 6
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 7
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 8
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 9
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 10
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 11
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 12
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 13
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 14
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 15
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 16
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 17
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 18
-    },
-    {
-        "Geometry": "S:1",
-        "Element": "H+",
-        "Index": 19
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 20
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 21
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 22
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 23
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 24
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 25
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 26
-    },
-    {
-        "Geometry": "L:2",
-        "Element": "H+",
-        "Index": 27
     }
 ]

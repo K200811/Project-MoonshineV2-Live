@@ -6,19 +6,26 @@ from pymatgen.analysis.local_env import CrystalNN
 from pymatgen.analysis.chemenv.coordination_environments.chemenv_strategies import SimplestChemenvStrategy
 from pymatgen.analysis.chemenv.coordination_environments.coordination_geometry_finder import LocalGeometryFinder
 from pymatgen.analysis.chemenv.coordination_environments.structure_environments import LightStructureEnvironments
-from pymatgen.ext.matproj import MPRester
 from pymatgen.analysis.structure_matcher import StructureMatcher
+from mp_api.client import MPRester
 
 
 import math
-
 import torch
-
 import warnings
-
-
 import json
-import sys
+
+import time
+
+start_time = time.perf_counter()
+
+with open("moonshine_data.json", "r") as f:
+    data = json.load(f)
+
+data["payload"]["current_stage"] = "DeltaProcess"
+
+with open("moonshine_data.json", "w") as f:
+    json.dump(data, f, indent=2)
 
 MP_API_KEY = ""
 
@@ -148,6 +155,7 @@ def OverlapCheck (file: str, hasHydrogen: bool):
         if (len(neighbors) > 0):
             for neighborSingular in neighbors:
                 print(f" In function -- There is a Overlap at Site {i} and overlaps with {neighborSingular.index} with a distance of {neighborSingular.nn_distance:.3f}")
+                data["payload"]["logs"]["warnings"].append(f" In function -- There is a Overlap at Site {i} and overlaps with {neighborSingular.index} with a distance of {neighborSingular.nn_distance:.3f}")
                 overlapDetected = True
                 
         
@@ -174,6 +182,8 @@ def isFullyMetalic (file: str):
 
     if allMetals:
         print("Is fulley metalic")
+        data["payload"]["logs"]["warnings"].append("Is fulley metalic")
+        
         return True
     else:
         print("is not fully metalic")
@@ -203,6 +213,7 @@ def CompositionBasedOxidizationTest (file: str,formula):
         return True
     else:
         print(f" No valid Oxidization found for {composition.reduced_formula}")
+        data["payload"]["logs"]["warnings"].append(f" No valid Oxidization found for {composition.reduced_formula}")
         return False
     
 #___________________________________________________________________
@@ -247,10 +258,12 @@ def BondBasedOxidizationTest (file: str, formula):
             return True
         else:
             print(f"Could not find valid oxidization states the total charge is {total_charge:.2f}")
+            data["payload"]["logs"]["warnings"].append(f"Could not find valid oxidization states the total charge is {total_charge:.2f}")
             print(structure.composition)
             return False
     except ValueError as e:
         print(f"Bond Lengths do not create a valid bond network that oxidization states can be assigned to Error: {e}")
+        data["payload"]["logs"]["warnings"].append(f"Bond Lengths do not create a valid bond network that oxidization states can be assigned to Error: {e}")
         print(" Runnign composition based oxidization")
         CompositionBasedOxidizationTestResultInBondBasedFunction = CompositionBasedOxidizationTest(file, formula)
         return CompositionBasedOxidizationTestResultInBondBasedFunction
@@ -271,6 +284,7 @@ def CoordinationNumbersTest (file): #Make sure the final input is the oxidized s
             cn = cnn.get_cn(structure, i)
         except Exception as e:
             print(f"Following error took place whiile getting the Coordination Number {e}")
+            data["payload"]["logs"]["warnings"].append(f"Following error took place whiile getting the Coordination Number {e}")
             return False
         
         min_cn, max_cn = CoordinationNumberLimitsPerElement[element]
@@ -307,12 +321,14 @@ def GeometryCheck (file, max_allowed_csm): # Checks if the geometries of bonds a
     
         if site_env is None or len(site_env) == 0:
             print(f"Warning: Could not determine site environment for site {i}. Skipping it.")
+            data["payload"]["logs"]["warnings"].append(f"Warning: Could not determine site environment for site {i}. Skipping it.")
             continue
         else:
             csm = site_env[0]['csm']
 
         if csm > max_allowed_csm:
             print(f"Failed Geometry check, site {site.species_string} at index {i}, has a impossible geometry leading to a csm of {csm}")
+            data["payload"]["logs"]["warnings"].append(f"Failed Geometry check, site {site.species_string} at index {i}, has a impossible geometry leading to a csm of {csm}")
             return False
         else:
             print(f"{site.species_string} passed local geometry check")
@@ -331,28 +347,40 @@ def GeometryCheck (file, max_allowed_csm): # Checks if the geometries of bonds a
 
 #_____________________________________________________________________________________________
 
-def StructureMatchingTest (file):
+def StructureMatchingTest (file, formula):
 
-    structure = Structure.from_file(file)
-    formula = structure.composition.reduced_formula
+    
+    localStructure = Structure.from_file(file)
+    reducedFormula = localStructure.reduced_formula
+    print(f"reduced formula: {reducedFormula}")
 
-    matcher = StructureMatcher()
-    matchFound = False
+    matcher = StructureMatcher(ltol=0.2, stol=0.3, angle_tol=5.0)
+
+    matches = []
 
     with MPRester(MP_API_KEY) as mpr:
-        docs = mpr.summary_search(formula = formula, _fields = ["structure", "material_id"])
+        docs = mpr.materials.summary.search(formula = reducedFormula, fields = ["material_id", "structure"])
+
+        print(f"found {len(docs)} candidents")
 
         for doc in docs:
-            mp_structure = doc["structure"]
-            mp_id = doc["material_id"]
+            mp_id = doc.material_id
+            mp_structure = doc.structure
 
-            if matcher.fit(structure, mp_structure):
-                print(f"Match found, entry ID is {mp_id}")
-                matchFound = True
-                return True
-    if not matchFound:
-        print("No matches in database!")
+            if matcher.fit(localStructure, mp_structure):
+                rms = matcher.get_rms_dist(localStructure, mp_structure)
+                matches.append({"mp_id": mp_id, "rms_displacement": rms})
+
+    if matches:
+        print("Matches found")
+        matches = sorted(matches, key=lambda x: x["rms_displacement"][0] if x["rms_displacement"] else 1.0)
+        for match in matches:
+            print(f"Matches {match['mp_id']} with an RMS Displacement of {match['rms_displacement']}")
+    else:
+        print("No match Found")
         return False
+    
+    return True
     
 #_________________________________________________________________________________________
 
@@ -369,76 +397,98 @@ if __name__ == "__main__":
         GammaArray = json.load(file)
 
     for entry in GammaArray:
+        for i in range(5):
 
-        print("\n")
-        print("-------------------------------------------------------NEW COMPOUND-----------------------------------------------------------------------")
-
-        HasHydrogen = False
-        formula = entry
-        print(f"FORMULA: {formula}")
-        # ----------------------------------------------- Overlap Check ---------------------------------------------------------------------
-        if "H" in formula:
-            HasHydrogen = True
-
-        print("\n")
-        print("--------------- RUNNING OVERLAPING CHECK  ------------------------")
-        OverlapCheckResults = OverlapCheck(f"Final_relaxedStructure_{formula}.cif", HasHydrogen)
-
-        if OverlapCheckResults == True:
-            print("In main -- Overlap Detected")
-            continue
-        if OverlapCheckResults == False:
-            print("In Main -- There is no overlap")
-        
-        # ------------------------------------------------------- Is All Metalic Check ---------------------------------------------------------------
-
-        print("\n")
-        print("-------------------- RUNNING IS ALL METAL CHECK ----------------------")
-
-        IsFulleymetalicResult = isFullyMetalic(f"Final_relaxedStructure_{formula}.cif")
-
-        if IsFulleymetalicResult == True:
-            #-----------Run Composition based Check------------ 
-            print("------------ Composition Based Oxidization test -----------")
-            CompositionBasedOxidizationTestResult = CompositionBasedOxidizationTest(f"Final_relaxedStructure_{formula}.cif", formula)
-            if CompositionBasedOxidizationTestResult == False:
-                continue
-            # All printing for this function takes place in the function
-
-        else: # Run a bond based check
             print("\n")
-            print("--------------- Bond Based Oxidization test ----------------")
-            BondBasedOxidizationTestResult = BondBasedOxidizationTest(f"Final_relaxedStructure_{formula}.cif", formula )
-            if(BondBasedOxidizationTestResult == False):
-                continue
-            # All printing takes place in the function
+            print("-----------------------------------------------NEW CANDIDET-------------------------------------------------")
 
-        # -------------------------------- Run Coordination Numbers Test --------------------
-        
-        print("\n")
-        print("---------------------- RUNNING COORDINATION NUMBERS TEST -----------------------")
-        CoordinationNumbersTestResult = CoordinationNumbersTest(f"{formula}_Oxidization_Assigned_Structure.cif")
-        if CoordinationNumbersTestResult == False:
-            continue
-        # All printing takes place in the function
+            # HasHydrogen = False
+            formula = entry
+            # print(f"FORMULA: {formula}")
+            # # ----------------------------------------------- Overlap Check ---------------------------------------------------------------------
+            # if "H" in formula:
+            #     HasHydrogen = True
 
-        print("\n")
-        print("---------------------------------- RUNNING GEOMETRY CHECK ---------------------------")
-        GeometryCheckResult = GeometryCheck(f"{formula}_Oxidization_Assigned_Structure.cif", 4.0)
-        if GeometryCheckResult == False:
-            continue
-        #all printing takes place in the function
+            # print("\n")
+            # print("--------------- RUNNING OVERLAPING CHECK  ------------------------")
+            # OverlapCheckResults = OverlapCheck(f"Final_relaxedStructure_{entry['Formula']}_{i}.cif", HasHydrogen)
 
-        # ------------------------- Run Structure Matching Test -------------------
+            # if OverlapCheckResults == True:
+            #     print("In main -- Overlap Detected")
+            #     continue
+            # if OverlapCheckResults == False:
+            #     print("In Main -- There is no overlap")
+            
+            # # ------------------------------------------------------- Is All Metalic Check ---------------------------------------------------------------
 
-        print('\n')
-        print("-------------------------- RUNNING STRUCTURE MATCHING TEST -------------------------")
-        StructureMatchingTestResult = StructureMatchingTest(f"Final_relaxedStructure_{formula}.cif")
-        if StructureMatchingTestResult == True:
-            continue
-        # all printing takes place inside the function
+            # print("\n")
+            # print("-------------------- RUNNING IS ALL METAL CHECK ----------------------")
+
+            # IsFulleymetalicResult = isFullyMetalic(f"Final_relaxedStructure_{entry['Formula']}_{i}.cif")
+
+            # if IsFulleymetalicResult == True:
+            #     #-----------Run Composition based Check------------ 
+            #     print("------------ Composition Based Oxidization test -----------")
+            #     CompositionBasedOxidizationTestResult = CompositionBasedOxidizationTest(f"Final_relaxedStructure_{entry['Formula']}_{i}.cif", formula)
+            #     if CompositionBasedOxidizationTestResult == False:
+            #         continue
+            #     # All printing for this function takes place in the function
+
+            # else: # Run a bond based check
+            #     print("\n")
+            #     print("--------------- Bond Based Oxidization test ----------------")
+            #     BondBasedOxidizationTestResult = BondBasedOxidizationTest(f"Final_relaxedStructure_{entry['Formula']}_{i}.cif", formula )
+            #     if(BondBasedOxidizationTestResult == False):
+            #         continue
+            #     # All printing takes place in the function
+
+            # # -------------------------------- Run Coordination Numbers Test --------------------
+            
+            # print("\n")
+            # print("---------------------- RUNNING COORDINATION NUMBERS TEST -----------------------")
+            # CoordinationNumbersTestResult = CoordinationNumbersTest(f"{formula}_Oxidization_Assigned_Structure.cif")
+            # if CoordinationNumbersTestResult == False:
+            #     continue
+            # # All printing takes place in the function
+
+            # print("\n")
+            # print("---------------------------------- RUNNING GEOMETRY CHECK ---------------------------")
+            # GeometryCheckResult = GeometryCheck(f"{formula}_Oxidization_Assigned_Structure.cif", 4.0)
+            # if GeometryCheckResult == False:
+            #     continue
+            # #all printing takes place in the function
+
+            #------------------------- Run Structure Matching Test -------------------
+            matches =  []
+            
+            print('\n')
+            print("-------------------------- RUNNING STRUCTURE MATCHING TEST -------------------------")
+            try:
+                StructureMatchingTestResult = StructureMatchingTest(f"Final_relaxedStructure_{entry['Formula']}_{i}.cif", formula)
+                print(f"file: Final_relaxedStructure_{entry['Formula']}_{i}.cif")
+                if StructureMatchingTestResult == True:
+                    matches.append(f"Final_relaxedStructure_{entry['Formula']}_{i}.cif")
+                    continue
+            except Exception as e:
+                print(f"Following error occured duing structure matching {e}")
+            # all printing takes place inside the function
+            print(f"matches: {matches}")
 
         DeltaArray.append(formula)
+    #------------------ End of loop ------------------
+    end_time = time.perf_counter()
+    execution_time = end_time - start_time
 
+    data["payload"]["stage_timing"][3]["seconds"] = execution_time
+
+    for i in range (len(DeltaArray)):
+        data["payload"]["candidates_in_system"] = []
+        data["payload"]["candidates_in_system"].append({
+        "formula": formula, "index": i, "id": f"cand_{i}", "status": "Passed Delta"
+    })
+
+    with open ("moonshine_data.json", "w") as f:
+        json.dump(data, f, indent=2)
+    
     with open("DeltaFile", "w") as json_file:
         json.dump(DeltaArray, json_file, indent=4)
