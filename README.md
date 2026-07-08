@@ -39,6 +39,8 @@ Usage
 Quick start
 Go into the Alpha Processing Layer and fill in the information about your seed crystal as asked in lines 47 - 50. In the Reference_Crystal_Elements array just list your starting seed crystals elements in order, same for the subscripts array just instead of the elements, the subscript associated with each element, in the same order as before. Run each layer. At the end the structures labeled Finnal_Crystal_Structure along with a formula in the name are the structures that have been produced. The slab structures are labeled slabs. All structures are in CIF format and can be viewed in a viewer like VESTA.
 
+Turn on moonshine server to see the UI. Program is not ment to be used with the UI
+
 License
 license type: MIT
 
